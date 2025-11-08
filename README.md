@@ -2,8 +2,6 @@
 
 A machine learning-based recommendation system that provides personalized workout programs based on individual fitness profiles, goals, and preferences.
 
-![Fitness Recommender](https://raw.githubusercontent.com/username/fitness-recommender/main/docs/images/header.png)
-
 ## 🏋️‍♀️ Overview
 
 This project implements a hybrid recommendation system for fitness programs that combines content-based and collaborative filtering approaches. The system analyzes user attributes (fitness level, goals, equipment availability) and program characteristics to suggest optimal workout plans tailored to individual needs.
@@ -41,8 +39,8 @@ The system is trained on a dataset containing:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/username/fitness-recommender.git
-cd fitness-recommender
+git clone https://github.com/AKHIL-149/workout-wizard.git
+cd workout-wizard
 ```
 
 2. Install required packages:
@@ -52,7 +50,7 @@ pip install -r requirements.txt
 
 3. Run the demo notebook:
 ```bash
-jupyter notebook demo.ipynb
+jupyter rs_test.ipynb
 ```
 
 ## 📖 How It Works
