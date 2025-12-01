@@ -1,0 +1,15 @@
+# Minimal requirements - Core functionality only
+# Use this if requirements.txt has compatibility issues
+
+# Core ML and Data Processing
+pandas
+numpy
+scikit-learn
+joblib
+
+# Validation
+pydantic>=2.5.0
+
+# Logging
+python-json-logger
+

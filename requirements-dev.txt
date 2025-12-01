@@ -1,0 +1,9 @@
+# Development and testing requirements
+# Install only if you need testing/development tools
+
+pytest
+pytest-cov
+black
+flake8
+mypy
+
