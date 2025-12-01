@@ -1,7 +1,0 @@
-# API-specific requirements
-# Install only if you need the REST API
-
-fastapi
-uvicorn[standard]
-python-multipart
-

@@ -1,59 +1,55 @@
 # Quick Start Guide
 
-Get up and running with the Fitness Recommendation System in 5 minutes!
+Get up and running with the Fitness Recommendation System in 5 minutes.
 
-## Step 1: Install Dependencies
+## Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/fitness_rms.git
+cd fitness_rms
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-## Step 2: Prepare the Model
+## Try It Out
 
-### Option A: Convert Existing Model
-
-If you have the old `fitness_recommendation_model.pkl`:
+### Option 1: Command Line (Fastest)
 
 ```bash
-python scripts/convert_model.py
+python -m src.cli --level Intermediate --goals "Weight Loss" --equipment "Full Gym"
 ```
 
-### Option B: Train New Model
+Parameters:
+- `--level`: Beginner, Intermediate, or Advanced
+- `--goals`: One or more fitness goals (e.g., "Weight Loss" "Strength")
+- `--equipment`: "At Home", "Garage Gym", or "Full Gym"
+- `--duration`: Optional, e.g., "60 min"
+- `--frequency`: Optional, workouts per week (1-7)
+- `--num`: Number of recommendations (default: 5)
 
-If you have the raw data files:
+### Option 2: REST API
 
+Start the server:
 ```bash
-python scripts/train_model.py
+python -m src.api.app
 ```
 
-## Step 3: Test the System
+Visit `http://localhost:8000/docs` for interactive API documentation.
 
-### Using CLI (Recommended for first test)
-
+Example request:
 ```bash
-python -m src.cli \
-  --level Intermediate \
-  --goals "Weight Loss" \
-  --equipment "Full Gym" \
-  --duration "60-75 min" \
-  --frequency 4 \
-  --style "Upper/Lower"
+curl -X POST "http://localhost:8000/recommend" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fitness_level": "Intermediate",
+    "goals": ["Weight Loss"],
+    "equipment": "Full Gym"
+  }'
 ```
 
-Expected output:
-```
-RECOMMENDED WORKOUT PROGRAMS
-================================================================================
-
-1. Advanced Fitness System
-   Match: 95%
-   Level: Intermediate
-   Goal: General Fitness
-   Equipment: Full Gym
-   ...
-```
-
-### Using Python API
+### Option 3: Python Code
 
 ```python
 from src.models.recommender import FitnessRecommender
@@ -63,104 +59,119 @@ from src.data.schemas import UserProfile
 recommender = FitnessRecommender()
 recommender.load_model()
 
-# Create profile
+# Get recommendations
 profile = UserProfile(
     fitness_level="Intermediate",
-    goals=["Weight Loss"],
-    equipment="Full Gym",
-    preferred_duration="60-75 min",
-    preferred_frequency=4,
-    preferred_style="Upper/Lower"
+    goals=["Weight Loss", "Strength"],
+    equipment="Full Gym"
 )
 
-# Get recommendations
-recs = recommender.recommend(profile)
-print(recs)
+recommendations = recommender.recommend(profile)
+print(recommendations)
 ```
 
-### Using REST API
+## Example Outputs
 
-1. Start the server:
-```bash
-python -m src.api.app
+### CLI Output
+```
+================================================================================
+RECOMMENDED WORKOUT PROGRAMS
+================================================================================
+
+1. 3-Day Full Body Split
+   Match: 100%
+   Level: Intermediate
+   Goal: Weight Loss
+   Equipment: Full Gym
+   Duration: 60 min/workout
+   Frequency: 3 workouts/week
+   Program Length: 12 weeks
 ```
 
-2. Visit http://localhost:8000/docs
-
-3. Try the `/recommend/simple` endpoint with:
+### API Response
 ```json
-{
-  "fitness_level": "Intermediate",
-  "goals": ["Weight Loss"],
-  "equipment": "Full Gym",
-  "preferred_duration": "60-75 min",
-  "preferred_frequency": 4,
-  "preferred_style": "Upper/Lower"
-}
+[
+  {
+    "program_id": "P001",
+    "title": "3-Day Full Body Split",
+    "primary_level": "Intermediate",
+    "primary_goal": "Weight Loss",
+    "equipment": "Full Gym",
+    "time_per_workout": "60 min",
+    "workout_frequency": 3,
+    "program_length": "12 weeks",
+    "match_percentage": 100
+  }
+]
 ```
 
-## Step 4: Run Tests (Optional)
+## Testing the System
 
+Run comprehensive tests:
 ```bash
-pytest
+# Unit tests
+pytest tests/ -v
+
+# Integration tests
+python test_all_improvements.py
+
+# Performance analysis
+python auto_optimize.py
 ```
 
-## Common Parameters
+## Common Use Cases
 
-### Fitness Levels
-- `Beginner`
-- `Novice`
-- `Intermediate`
-- `Advanced`
+### Beginner at Home
+```bash
+python -m src.cli --level Beginner --goals "General Fitness" --equipment "At Home"
+```
 
-### Goals
-- `General Fitness`
-- `Weight Loss`
-- `Strength`
-- `Hypertrophy`
-- `Bodybuilding`
-- `Powerlifting`
-- `Athletics`
-- `Endurance`
-- `Muscle & Sculpting`
-- `Bodyweight Fitness`
-- `Athletic Performance`
+### Intermediate Weight Loss
+```bash
+python -m src.cli --level Intermediate --goals "Weight Loss" --equipment "Full Gym" --frequency 4
+```
 
-### Equipment
-- `At Home`
-- `Dumbbell Only`
-- `Full Gym`
-- `Garage Gym`
+### Advanced Strength Training
+```bash
+python -m src.cli --level Advanced --goals "Strength" "Powerlifting" --equipment "Full Gym" --duration "75-90 min" --frequency 5
+```
 
-### Durations
-- `30-45 min`
-- `45-60 min`
-- `60-75 min`
-- `75-90 min`
-- `90+ min`
+### Multiple Goals
+```bash
+python -m src.cli --level Intermediate --goals "Weight Loss" "Strength" "Endurance" --equipment "Garage Gym"
+```
 
-### Training Styles
-- `Full Body`
-- `Upper/Lower`
-- `Push/Pull/Legs`
-- `Body Part Split`
-- `No preference`
+## Performance Tips
+
+1. **Caching**: Repeated queries with the same profile are instant (cached)
+2. **Diversity**: System automatically ensures variety in recommendations
+3. **Goal Matching**: Uses both rule-based and semantic matching for better accuracy
 
 ## Troubleshooting
 
-**Problem**: `Model not loaded` error
-**Solution**: Run `python scripts/convert_model.py` or `python scripts/train_model.py`
+### Model not found
+```bash
+# The model should be at models/fitness_recommendation_model.joblib
+# If missing, check that you've cloned the full repository
+```
 
-**Problem**: `ModuleNotFoundError`
-**Solution**: Make sure you're in the project root directory and virtual environment is activated
+### Import errors
+```bash
+# Make sure you're in the project root directory
+# and have installed all requirements
+pip install -r requirements.txt
+```
 
-**Problem**: API won't start
-**Solution**: Check if port 8000 is in use. Use a different port: `uvicorn src.api.app:app --port 8080`
+### Module not found
+```bash
+# Run commands from the project root:
+cd fitness_rms
+python -m src.cli ...
+```
 
 ## Next Steps
 
-- Read the full [README.md](README_NEW.md) for detailed documentation
-- Check out the [Jupyter notebooks](rs_test.ipynb) for interactive examples
-- Explore the [API documentation](http://localhost:8000/docs) (after starting the server)
-- Look at the [tests](tests/) for usage examples
-
+- Explore `src/models/recommender.py` to understand the algorithm
+- Check `improvements/` directory for enhancement modules
+- Read the full README.md for detailed documentation
+- Modify `src/config.py` to adjust system parameters

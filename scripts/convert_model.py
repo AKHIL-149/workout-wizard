@@ -38,7 +38,7 @@ def convert_model():
                 model_components = pickle.load(f)
         except (AttributeError, ModuleNotFoundError) as e:
             logger.warning(f"Version incompatibility detected: {e}")
-            print(f"\n⚠ Version incompatibility detected!")
+            print(f"\nWARNING: Version incompatibility detected!")
             print(f"The pickle file was created with a different scikit-learn version.")
             print(f"\nRecommendation: Train a new model instead:")
             print(f"  python scripts/train_model.py")
