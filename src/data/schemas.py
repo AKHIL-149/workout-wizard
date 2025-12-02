@@ -83,8 +83,10 @@ class UserProfile(BaseModel):
     
     @field_validator('preferred_duration')
     @classmethod
-    def validate_duration(cls, v: str) -> str:
+    def validate_duration(cls, v: Optional[str]) -> Optional[str]:
         """Validate duration is in allowed list."""
+        if v is None:
+            return v
         if v not in VALID_DURATIONS:
             raise ValueError(
                 f"preferred_duration must be one of {VALID_DURATIONS}, got '{v}'"
@@ -93,8 +95,10 @@ class UserProfile(BaseModel):
     
     @field_validator('preferred_style')
     @classmethod
-    def validate_style(cls, v: str) -> str:
+    def validate_style(cls, v: Optional[str]) -> Optional[str]:
         """Validate training style is in allowed list."""
+        if v is None:
+            return v
         if v not in VALID_TRAINING_STYLES:
             raise ValueError(
                 f"preferred_style must be one of {VALID_TRAINING_STYLES}, got '{v}'"

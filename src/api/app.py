@@ -4,8 +4,10 @@ Provides REST API endpoints for generating recommendations.
 """
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from typing import Dict, Any
 
 from src.config import API_TITLE, API_VERSION, API_DESCRIPTION
@@ -30,11 +32,22 @@ async def lifespan(app: FastAPI):
     """Lifespan event handler for startup and shutdown."""
     # Startup
     try:
+        logger.info("="*60)
+        logger.info("Starting Fitness Recommendation System API")
+        logger.info("="*60)
         logger.info("Loading recommendation model...")
         recommender.load_model()
-        logger.info("Model loaded successfully")
+        logger.info(f"[OK] Model loaded successfully")
+        logger.info(f"[OK] Programs available: {len(recommender.programs_df) if recommender.programs_df is not None else 0}")
+        logger.info(f"[OK] Model loaded: {recommender.model_loaded}")
+        logger.info("="*60)
+        logger.info("API ready to accept requests at http://localhost:8000")
+        logger.info("API documentation available at http://localhost:8000/docs")
+        logger.info("="*60)
     except Exception as e:
-        logger.error(f"Failed to load model on startup: {e}")
+        logger.error("="*60)
+        logger.error(f"✗ Failed to load model on startup: {e}", exc_info=True)
+        logger.error("="*60)
         # Don't crash the app, but log the error
     
     yield
@@ -59,6 +72,30 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Custom exception handler for validation errors
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle validation errors with better formatting."""
+    errors = []
+    for error in exc.errors():
+        error_detail = {
+            "field": " -> ".join(str(loc) for loc in error["loc"]),
+            "message": error["msg"],
+            "type": error["type"]
+        }
+        errors.append(error_detail)
+    
+    logger.error(f"Validation error: {errors}")
+    
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={
+            "detail": "Validation Error",
+            "errors": errors
+        },
+    )
 
 
 @app.get("/", response_model=Dict[str, str])
@@ -137,8 +174,14 @@ async def get_recommendations(request: RecommendationRequest):
         return response
         
     except Exception as e:
-        logger.error(f"Error generating recommendations: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error generating recommendations: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail={
+                "error": str(e),
+                "type": type(e).__name__
+            }
+        )
 
 
 @app.post("/recommend/simple")
@@ -160,8 +203,14 @@ async def get_recommendations_simple(user_profile: UserProfile):
         return recommendations_df.to_dict('records')
         
     except Exception as e:
-        logger.error(f"Error generating recommendations: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error generating recommendations: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail={
+                "error": str(e),
+                "type": type(e).__name__
+            }
+        )
 
 
 if __name__ == "__main__":

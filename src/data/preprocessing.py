@@ -53,13 +53,17 @@ def calculate_intensity_score(
     Calculate an intensity score based on program features.
     
     Args:
-        workout_frequency: Number of workouts per week
-        time_per_workout: Duration of each workout in minutes
+        workout_frequency: Number of workouts per week (defaults to 4 if None)
+        time_per_workout: Duration of each workout in minutes (defaults to 60 if None)
         primary_level: Fitness level
         
     Returns:
         Intensity score (0-10)
     """
+    # Handle None values with sensible defaults
+    workout_frequency = workout_frequency if workout_frequency is not None else 4
+    time_per_workout = time_per_workout if time_per_workout is not None else 60
+    
     # Base score from workout frequency
     intensity = float(workout_frequency)
     
@@ -146,14 +150,14 @@ def process_user_features(user_profile: Dict[str, Any]) -> Dict[str, Any]:
     features['primary_level'] = features.get('fitness_level', 'Novice')
     
     # Map preferred duration to numeric value
-    duration = features.get('preferred_duration', '45-60 min')
+    duration = features.get('preferred_duration') or '45-60 min'
     features['time_per_workout'] = DURATION_MAP.get(duration, 60)
     
-    # Set workout frequency
-    features['workout_frequency'] = features.get('preferred_frequency', 4)
+    # Set workout frequency (handle None values)
+    features['workout_frequency'] = features.get('preferred_frequency') or 4
     
-    # Map training style
-    style = features.get('preferred_style', 'No preference')
+    # Map training style (handle None values)
+    style = features.get('preferred_style') or 'No preference'
     features['training_style'] = TRAINING_STYLE_MAP.get(style, 'Other')
     
     # Set program length based on fitness level

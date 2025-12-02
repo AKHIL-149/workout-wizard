@@ -11,11 +11,13 @@ help:
 	@echo "  make train        - Train model from scratch"
 	@echo ""
 	@echo "Running:"
-	@echo "  make run-api      - Start the REST API server"
+	@echo "  make run-api      - Start the REST API server (with enhanced logging)"
 	@echo "  make run-cli      - Run CLI with example"
+	@echo "  make test-api     - Run API integration tests"
 	@echo ""
 	@echo "Development:"
-	@echo "  make test         - Run all tests"
+	@echo "  make test         - Run all unit tests"
+	@echo "  make test-api     - Run API integration tests"
 	@echo "  make lint         - Check code quality"
 	@echo "  make format       - Format code with black"
 	@echo "  make clean        - Clean generated files"
@@ -31,7 +33,10 @@ train:
 	python scripts/train_model.py
 
 run-api:
-	python -m src.api.app
+	python run_backend.py
+
+test-api:
+	python test_api_request.py
 
 run-cli:
 	python -m src.cli --level Intermediate --goals "Weight Loss" --equipment "Full Gym" --duration "60-75 min" --frequency 4 --style "Upper/Lower"
@@ -53,6 +58,7 @@ clean:
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
 	rm -rf .pytest_cache .coverage htmlcov dist build 2>/dev/null || true
+	@echo "Cache cleared! Restart the backend for changes to take effect."
 
 # Windows equivalents
 install-win:
