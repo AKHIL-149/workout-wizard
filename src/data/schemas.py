@@ -31,18 +31,18 @@ class UserProfile(BaseModel):
         ...,
         description="Available equipment"
     )
-    preferred_duration: str = Field(
-        ...,
+    preferred_duration: Optional[str] = Field(
+        None,
         description="Preferred workout duration"
     )
-    preferred_frequency: int = Field(
-        ...,
+    preferred_frequency: Optional[int] = Field(
+        None,
         ge=1,
         le=7,
         description="Preferred workout frequency (workouts per week)"
     )
-    preferred_style: str = Field(
-        ...,
+    preferred_style: Optional[str] = Field(
+        None,
         description="Preferred training style"
     )
     user_id: Optional[str] = Field(
