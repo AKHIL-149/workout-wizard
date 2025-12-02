@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.fitness_frontend"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // ndkVersion = flutter.ndkVersion  // Commented out - will use default NDK
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
