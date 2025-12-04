@@ -10,7 +10,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# Only ignore Python lib folders, not Flutter lib/
+fitness_backend/lib/
 lib64/
 parts/
 sdist/
