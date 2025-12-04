@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/recommendation.dart';
 import '../models/user_profile.dart';
+import 'program_details_screen.dart';
 
 class ResultsScreen extends StatefulWidget {
   final List<Recommendation> recommendations;
@@ -567,34 +568,12 @@ class ProgramCard extends StatelessWidget {
   }
 
   void _showProgramDetails(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(recommendation.title),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _DetailRow('Match', '${recommendation.matchPercentage}%'),
-              _DetailRow('Level', recommendation.primaryLevel),
-              _DetailRow('Goal', recommendation.primaryGoal),
-              _DetailRow('Equipment', recommendation.equipment),
-              _DetailRow('Duration', '${recommendation.timePerWorkout} min/workout'),
-              _DetailRow('Frequency', '${recommendation.workoutFrequency} workouts/week'),
-              _DetailRow('Program Length', '${recommendation.programLength} weeks'),
-              if (recommendation.trainingStyle != null)
-                _DetailRow('Training Style', recommendation.trainingStyle!),
-              _DetailRow('Program ID', recommendation.programId),
-            ],
-          ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProgramDetailsScreen(
+          recommendation: recommendation,
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
       ),
     );
   }
@@ -703,30 +682,4 @@ class _ProfileTag extends StatelessWidget {
   }
 }
 
-class _DetailRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _DetailRow(this.label, this.value);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              '$label:',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(child: Text(value)),
-        ],
-      ),
-    );
-  }
-}
 
