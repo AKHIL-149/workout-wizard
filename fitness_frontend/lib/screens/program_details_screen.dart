@@ -5,6 +5,7 @@ import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
 import '../services/storage_service.dart';
 import '../services/workout_day_generator.dart';
+import '../services/exercise_parser_service.dart';
 import '../widgets/formatted_exercise_guidance.dart';
 import 'workout_tracking_screen.dart';
 import 'workout_day_details_screen.dart';
@@ -29,6 +30,11 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
   final StorageService _storageService = StorageService();
   final AnalyticsService _analyticsService = AnalyticsService();
   final GamificationService _gamificationService = GamificationService();
+  final ExerciseParserService _parser = ExerciseParserService();
+
+  // Cached parsed exercises organized by day type
+  Map<String, List<ParsedExercise>> _exercisesByDay = {};
+  bool _exercisesParsed = false;
 
   @override
   void initState() {
@@ -36,6 +42,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
     _tabController = TabController(length: 3, vsync: this); // Changed from 4 to 3 (removed Reviews tab)
     _checkFavoriteStatus();
     _trackView();
+    _parseExercises();
   }
 
   @override
@@ -77,6 +84,13 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
       },
     );
     await _gamificationService.recordActivity('program_viewed');
+  }
+
+  void _parseExercises() {
+    // Parse exercises from markdown and cache them
+    final parsed = _parser.parseExerciseGuidance(widget.recommendation.exerciseGuidance);
+    _exercisesByDay = _parser.organizeByDayType(parsed);
+    _exercisesParsed = true;
   }
 
   Future<void> _startProgram() async {
@@ -758,7 +772,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${widget.recommendation.timePerWorkout} min • ${_getExerciseCount()} exercises',
+                    '${widget.recommendation.timePerWorkout} min • ${_getExerciseCount(day)} exercises',
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.grey[600],
@@ -1052,7 +1066,17 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
     return 'Workout $day';
   }
 
-  int _getExerciseCount() {
-    return widget.recommendation.timePerWorkout ~/ 5; // Rough estimate
+  int _getExerciseCount(int day) {
+    if (!_exercisesParsed) return 0;
+
+    final dayName = _getWorkoutTypeName(day);
+    final exercises = _exercisesByDay[dayName] ?? [];
+
+    // If no exercises found for this specific day, use fallback
+    if (exercises.isEmpty) {
+      return widget.recommendation.timePerWorkout ~/ 5; // Rough estimate
+    }
+
+    return exercises.length;
   }
 }
