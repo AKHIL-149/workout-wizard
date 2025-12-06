@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user_profile.dart';
-import '../services/api_service.dart';
+import '../services/hybrid_recommender_service.dart';
 import 'results_screen.dart';
 
 class RecommendationFormScreen extends StatefulWidget {
@@ -12,7 +12,7 @@ class RecommendationFormScreen extends StatefulWidget {
 
 class _RecommendationFormScreenState extends State<RecommendationFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ApiService _apiService = ApiService();
+  final HybridRecommenderService _recommenderService = HybridRecommenderService();
   
   // Form values
   String _fitnessLevel = 'Intermediate';
@@ -53,22 +53,38 @@ class _RecommendationFormScreenState extends State<RecommendationFormScreen> {
         preferredStyle: _trainingStyle,
       );
 
-      final recommendations = await _apiService.getRecommendations(profile);
+      // Use hybrid recommender (on-device primary, backend fallback)
+      final result = await _recommenderService.getRecommendations(profile);
 
       if (!mounted) return;
+
+      // Show info about recommendation source
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Text(result.sourceIcon),
+              const SizedBox(width: 8),
+              Expanded(child: Text(result.sourceDescription)),
+            ],
+          ),
+          backgroundColor: result.isOffline ? Colors.orange : Colors.green,
+          duration: const Duration(seconds: 2),
+        ),
+      );
 
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ResultsScreen(
-            recommendations: recommendations,
+            recommendations: result.recommendations,
             userProfile: profile,
           ),
         ),
       );
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),

@@ -28,7 +28,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this); // Changed from 4 to 3 (removed Reviews tab)
     _checkFavoriteStatus();
     _trackView();
   }
@@ -137,7 +137,6 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
                       _buildOverviewTab(),
                       _buildProgramStructureTab(),
                       _buildResultsTab(),
-                      _buildReviewsTab(),
                     ],
                   ),
                 ),
@@ -257,60 +256,17 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
-              // Rating
-              if (widget.recommendation.rating != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.amber.shade200),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.star, color: Colors.amber.shade700, size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        widget.recommendation.rating!.toStringAsFixed(1),
-                        style: TextStyle(
-                          color: Colors.amber.shade900,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
             ],
           ),
           const SizedBox(height: 12),
-          if (widget.recommendation.description != null)
-            Text(
-              widget.recommendation.description!,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey[700],
-                height: 1.5,
-              ),
+          Text(
+            widget.recommendation.shortDescription,
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[700],
+              height: 1.5,
             ),
-          if (widget.recommendation.userCount != null) ...[
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.people, size: 16, color: Colors.grey[600]),
-                const SizedBox(width: 4),
-                Text(
-                  '${widget.recommendation.userCount} users following',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         ],
       ),
     );
@@ -416,7 +372,6 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
           Tab(text: 'Overview'),
           Tab(text: 'Structure'),
           Tab(text: 'Results'),
-          Tab(text: 'Reviews'),
         ],
       ),
     );
@@ -430,46 +385,32 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
         children: [
           _buildSectionTitle('Program Details', Icons.info_outline),
           const SizedBox(height: 12),
-          _buildInfoRow('Fitness Level', widget.recommendation.primaryLevel, Icons.trending_up),
-          _buildInfoRow('Primary Goal', widget.recommendation.primaryGoal, Icons.flag),
+          _buildInfoRow('Fitness Level', widget.recommendation.level.join(', '), Icons.trending_up),
+          _buildInfoRow('Primary Goal', widget.recommendation.goal.join(', '), Icons.flag),
           _buildInfoRow('Equipment', widget.recommendation.equipment, Icons.fitness_center),
-          if (widget.recommendation.trainingStyle != null)
-            _buildInfoRow('Training Style', widget.recommendation.trainingStyle!, Icons.sports_gymnastics),
+          _buildInfoRow('Total Exercises', '${widget.recommendation.totalExercises}', Icons.list_alt),
           _buildInfoRow('Program ID', widget.recommendation.programId, Icons.tag),
 
           const SizedBox(height: 24),
-          _buildSectionTitle('What You\'ll Get', Icons.star_border),
+          _buildSectionTitle('Exercise Guidance', Icons.fitness_center),
           const SizedBox(height: 12),
 
-          if (widget.recommendation.highlights != null && widget.recommendation.highlights!.isNotEmpty)
-            ...widget.recommendation.highlights!.map((highlight) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.check,
-                      size: 14,
-                      color: Colors.green.shade700,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      highlight,
-                      style: const TextStyle(fontSize: 14, height: 1.5),
-                    ),
-                  ),
-                ],
+          if (widget.recommendation.exerciseGuidance.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.blue.shade200),
               ),
-            ))
+              child: Text(
+                widget.recommendation.exerciseGuidance,
+                style: const TextStyle(
+                  fontSize: 14,
+                  height: 1.6,
+                ),
+              ),
+            )
           else ...[
             _buildBenefitItem('Structured workout plan'),
             _buildBenefitItem('Progressive overload principles'),
@@ -613,95 +554,6 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
     );
   }
 
-  Widget _buildReviewsTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSectionTitle('User Reviews', Icons.rate_review),
-          const SizedBox(height: 12),
-
-          // Rating Summary
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.amber.shade100, Colors.amber.shade50],
-              ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      widget.recommendation.rating?.toStringAsFixed(1) ?? '4.8',
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Row(
-                      children: List.generate(5, (index) {
-                        return Icon(
-                          Icons.star,
-                          color: Colors.amber.shade700,
-                          size: 20,
-                        );
-                      }),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${widget.recommendation.userCount ?? "1.2k"} reviews',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 24),
-                Expanded(
-                  child: Column(
-                    children: [
-                      _buildRatingBar(5, 0.75),
-                      _buildRatingBar(4, 0.15),
-                      _buildRatingBar(3, 0.06),
-                      _buildRatingBar(2, 0.03),
-                      _buildRatingBar(1, 0.01),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Sample Reviews
-          _buildReviewCard(
-            'Sarah M.',
-            5,
-            '3 months ago',
-            'Amazing program! I\'ve gained so much strength and confidence. The progression is well-structured and challenging.',
-          ),
-          _buildReviewCard(
-            'Mike T.',
-            4,
-            '1 month ago',
-            'Great program overall. Saw significant gains in the first 8 weeks. Could use more recovery guidance.',
-          ),
-          _buildReviewCard(
-            'Jennifer K.',
-            5,
-            '2 weeks ago',
-            'Best program I\'ve ever followed. Clear instructions, perfect for my level, and I love the variety!',
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildFloatingActionButtons() {
     return Container(
@@ -1115,110 +967,6 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
     );
   }
 
-  Widget _buildRatingBar(int stars, double percentage) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Text(
-            '$stars',
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(width: 4),
-          Icon(Icons.star, size: 14, color: Colors.amber.shade700),
-          const SizedBox(width: 8),
-          Expanded(
-            child: LinearProgressIndicator(
-              value: percentage,
-              backgroundColor: Colors.grey[200],
-              color: Colors.amber.shade700,
-              minHeight: 6,
-              borderRadius: BorderRadius.circular(3),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '${(percentage * 100).toInt()}%',
-            style: const TextStyle(fontSize: 11),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReviewCard(String name, int stars, String time, String review) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Text(
-                  name[0],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        ...List.generate(stars, (index) {
-                          return Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.amber.shade700,
-                          );
-                        }),
-                        const SizedBox(width: 4),
-                        Text(
-                          time,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            review,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[700],
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // Helper Methods
 

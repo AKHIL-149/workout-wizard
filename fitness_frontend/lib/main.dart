@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen.dart';
+import 'services/hybrid_recommender_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize hybrid recommender (loads on-device program database)
+  await HybridRecommenderService().initialize();
+
   runApp(const FitnessRecommenderApp());
 }
 

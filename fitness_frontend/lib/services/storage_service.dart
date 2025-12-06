@@ -49,22 +49,7 @@ class StorageService {
   Future<void> saveRecommendations(List<Recommendation> recommendations) async {
     final prefs = await SharedPreferences.getInstance();
     final recsJson = json.encode(
-      recommendations.map((r) => {
-        'program_id': r.programId,
-        'title': r.title,
-        'primary_level': r.primaryLevel,
-        'primary_goal': r.primaryGoal,
-        'equipment': r.equipment,
-        'program_length': r.programLength,
-        'time_per_workout': r.timePerWorkout,
-        'workout_frequency': r.workoutFrequency,
-        'match_percentage': r.matchPercentage,
-        'training_style': r.trainingStyle,
-        'rating': r.rating,
-        'user_count': r.userCount,
-        'description': r.description,
-        'highlights': r.highlights,
-      }).toList(),
+      recommendations.map((r) => r.toJson()).toList(),
     );
     await prefs.setString(_recentRecommendationsKey, recsJson);
   }
@@ -77,9 +62,11 @@ class StorageService {
 
     try {
       final recsList = json.decode(recsJson) as List;
-      return recsList
-          .map((data) => Recommendation.fromJson(data as Map<String, dynamic>))
-          .toList();
+      return recsList.map((data) {
+        final programData = data as Map<String, dynamic>;
+        final programId = programData['program_id'] as String? ?? 'UNKNOWN';
+        return Recommendation.fromJson(programId, programData);
+      }).toList();
     } catch (e) {
       return null;
     }

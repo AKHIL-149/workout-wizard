@@ -36,8 +36,25 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) => Recommendation.fromJson(json)).toList();
+        final dynamic data = jsonDecode(response.body);
+
+        // Backend can return either a Map (like on-device) or a List
+        if (data is Map<String, dynamic>) {
+          // Map structure: {"FP000001": {...}, "FP000002": {...}}
+          return data.entries.map((entry) {
+            final programId = entry.key;
+            final programData = entry.value as Map<String, dynamic>;
+            return Recommendation.fromJson(programId, programData);
+          }).toList();
+        } else if (data is List) {
+          // If backend returns list with program_id field
+          return data.map((json) {
+            final programId = json['program_id'] ?? 'UNKNOWN';
+            return Recommendation.fromJson(programId, json as Map<String, dynamic>);
+          }).toList();
+        } else {
+          throw Exception('Unexpected response format from API');
+        }
       } else {
         throw Exception('Failed to get recommendations: ${response.statusCode}');
       }

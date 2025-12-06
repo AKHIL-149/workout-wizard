@@ -45,7 +45,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
-  # Add assets if needed
-  # assets:
-  #   - images/
+
+  # Embedded program database for on-device recommendations
+  assets:
+    - assets/data/programs_database.json

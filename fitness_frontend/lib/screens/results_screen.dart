@@ -363,78 +363,50 @@ class ProgramCard extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    // Description (if available)
-                    if (recommendation.description != null) ...[
-                      Text(
-                        recommendation.description!,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                          height: 1.4,
+                    // Short Description
+                    Text(
+                      recommendation.shortDescription,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                        height: 1.4,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Total Exercises Badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.tertiary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 12),
-                    ],
-
-                    // Highlights (if available)
-                    if (recommendation.highlights != null && recommendation.highlights!.isNotEmpty) ...[
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: recommendation.highlights!.map((highlight) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              highlight,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-
-                    // Rating and User Count (if available)
-                    if (recommendation.rating != null || recommendation.userCount != null) ...[
-                      Row(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (recommendation.rating != null) ...[
-                            Icon(Icons.star, color: Colors.amber, size: 18),
-                            const SizedBox(width: 4),
-                            Text(
-                              recommendation.rating!.toStringAsFixed(1),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
+                          Icon(
+                            Icons.list_alt,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${recommendation.totalExercises} Total Exercises',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.tertiary,
                             ),
-                            const SizedBox(width: 16),
-                          ],
-                          if (recommendation.userCount != null) ...[
-                            Icon(Icons.people, color: Colors.grey[600], size: 18),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${recommendation.userCount} users',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                    ],
+                    ),
+                    const SizedBox(height: 16),
 
                     // Details Grid
                     Container(
@@ -474,14 +446,6 @@ class ProgramCard extends StatelessWidget {
                         ],
                       ),
                     ),
-
-                    if (recommendation.trainingStyle != null) ...[
-                      const SizedBox(height: 12),
-                      Chip(
-                        label: Text(recommendation.trainingStyle!),
-                        avatar: const Icon(Icons.sports_gymnastics, size: 16),
-                      ),
-                    ],
 
                     const SizedBox(height: 16),
 
