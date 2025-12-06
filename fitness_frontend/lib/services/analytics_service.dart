@@ -12,6 +12,8 @@ enum AnalyticsEvent {
   filterApplied,
   onboardingCompleted,
   achievementUnlocked,
+  workoutCompleted,
+  programStarted,
 }
 
 /// User action data model

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/recommendation.dart';
 import '../models/user_profile.dart';
+import '../services/active_program_service.dart';
+import '../services/analytics_service.dart';
 import 'program_details_screen.dart';
+import 'workout_tracking_screen.dart';
 
 class ResultsScreen extends StatefulWidget {
   final List<Recommendation> recommendations;
@@ -454,9 +457,7 @@ class ProgramCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
-                              // TODO: Implement start program
-                            },
+                            onPressed: () => _startProgram(context, recommendation),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: RoundedRectangleBorder(
@@ -537,6 +538,34 @@ class ProgramCard extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => ProgramDetailsScreen(
           recommendation: recommendation,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _startProgram(BuildContext context, Recommendation program) async {
+    // Import required services
+    final activeProgramService = ActiveProgramService();
+    final analyticsService = AnalyticsService();
+
+    // Start the program
+    await activeProgramService.startProgram(program);
+    await analyticsService.trackEvent(
+      AnalyticsEvent.programStarted,
+      metadata: {
+        'program_id': program.programId,
+        'program_title': program.title,
+      },
+    );
+
+    if (!context.mounted) return;
+
+    // Navigate to workout tracking screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkoutTrackingScreen(
+          program: program,
         ),
       ),
     );

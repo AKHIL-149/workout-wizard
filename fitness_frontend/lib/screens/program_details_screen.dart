@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/recommendation.dart';
+import '../services/active_program_service.dart';
 import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
 import '../services/storage_service.dart';
+import 'workout_tracking_screen.dart';
 
 /// Enhanced program details screen with comprehensive information
 class ProgramDetailsScreen extends StatefulWidget {
@@ -75,31 +77,29 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
   }
 
   Future<void> _startProgram() async {
+    final activeProgramService = ActiveProgramService();
+
+    // Start the program
+    await activeProgramService.startProgram(widget.recommendation);
+
     await _analyticsService.trackEvent(
-      AnalyticsEvent.programClicked,
+      AnalyticsEvent.programStarted,
       metadata: {
         'program_id': widget.recommendation.programId,
-        'action': 'started',
+        'program_title': widget.recommendation.title,
       },
     );
     await _gamificationService.recordActivity('program_started');
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text('Started: ${widget.recommendation.title}'),
-            ),
-          ],
+    // Navigate to workout tracking screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkoutTrackingScreen(
+          program: widget.recommendation,
         ),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
