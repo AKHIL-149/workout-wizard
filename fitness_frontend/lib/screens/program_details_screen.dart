@@ -4,6 +4,7 @@ import '../services/active_program_service.dart';
 import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
 import '../services/storage_service.dart';
+import '../widgets/formatted_exercise_guidance.dart';
 import 'workout_tracking_screen.dart';
 
 /// Enhanced program details screen with comprehensive information
@@ -130,7 +131,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
 
                 // Tab Content
                 SizedBox(
-                  height: 600,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   child: TabBarView(
                     controller: _tabController,
                     children: [
@@ -395,28 +396,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
           _buildSectionTitle('Exercise Guidance', Icons.fitness_center),
           const SizedBox(height: 12),
 
-          if (widget.recommendation.exerciseGuidance.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue.shade200),
-              ),
-              child: Text(
-                widget.recommendation.exerciseGuidance,
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.6,
-                ),
-              ),
-            )
-          else ...[
-            _buildBenefitItem('Structured workout plan'),
-            _buildBenefitItem('Progressive overload principles'),
-            _buildBenefitItem('Detailed exercise instructions'),
-            _buildBenefitItem('Track your progress'),
-          ],
+          FormattedExerciseGuidance(markdownText: widget.recommendation.exerciseGuidance),
 
           const SizedBox(height: 24),
           _buildSectionTitle('Who Is This For?', Icons.people_outline),

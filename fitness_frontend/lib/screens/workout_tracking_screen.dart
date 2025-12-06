@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/recommendation.dart';
 import '../services/active_program_service.dart';
 import '../services/analytics_service.dart';
+import '../widgets/formatted_exercise_guidance.dart';
 
 /// Screen for tracking workouts and viewing exercise guidance
 class WorkoutTrackingScreen extends StatefulWidget {
@@ -368,37 +369,8 @@ class _WorkoutTrackingScreenState extends State<WorkoutTrackingScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        if (widget.program.exerciseGuidance.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.blue.shade200),
-            ),
-            child: SingleChildScrollView(
-              child: Text(
-                widget.program.exerciseGuidance,
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.6,
-                ),
-              ),
-            ),
-          )
-        else
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text(
-              'No specific exercise guidance available for this program. Follow the general workout structure and focus on proper form.',
-              style: TextStyle(fontSize: 14, height: 1.5),
-            ),
-          ),
+        const SizedBox(height: 16),
+        FormattedExerciseGuidance(markdownText: widget.program.exerciseGuidance),
       ],
     );
   }
