@@ -26,11 +26,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
   List<Recommendation> get _filteredRecommendations {
     switch (_selectedFilter) {
       case 'Perfect Match':
-        return widget.recommendations.where((r) => r.matchPercentage == 100).toList();
+        return widget.recommendations.where((r) => r.matchPercentage >= 90).toList();
       case 'High Match':
-        return widget.recommendations.where((r) => r.matchPercentage >= 80).toList();
+        return widget.recommendations.where((r) => r.matchPercentage >= 70 && r.matchPercentage < 90).toList();
       case 'Beginner Friendly':
-        return widget.recommendations.where((r) => r.primaryLevel == 'Beginner').toList();
+        return widget.recommendations.where((r) => r.matchesLevel('Beginner')).toList();
       default:
         return widget.recommendations;
     }
