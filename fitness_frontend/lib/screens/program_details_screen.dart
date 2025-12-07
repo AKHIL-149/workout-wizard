@@ -468,6 +468,9 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
   }
 
   Widget _buildResultsTab() {
+    final goalSpecificResults = _buildGoalSpecificResults();
+    final dynamicTimeline = _buildDynamicTimeline();
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -475,52 +478,11 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
         children: [
           _buildSectionTitle('Expected Results', Icons.trending_up),
           const SizedBox(height: 12),
-
-          _buildResultCard(
-            'Strength Gains',
-            '15-25%',
-            'Average increase in major lifts',
-            Icons.fitness_center,
-            Colors.red,
-          ),
-          _buildResultCard(
-            'Muscle Growth',
-            '2-5 lbs',
-            'Lean muscle mass gained',
-            Icons.accessibility_new,
-            Colors.blue,
-          ),
-          _buildResultCard(
-            'Body Fat',
-            '-2-5%',
-            'Reduction in body fat percentage',
-            Icons.trending_down,
-            Colors.green,
-          ),
-
+          ...goalSpecificResults,
           const SizedBox(height: 24),
           _buildSectionTitle('Progress Timeline', Icons.show_chart),
           const SizedBox(height: 12),
-
-          _buildTimelineItem(
-            'Week 1-2',
-            'Adaptation Phase',
-            'Learning movements, some initial strength gains',
-            Colors.blue,
-          ),
-          _buildTimelineItem(
-            'Week 3-6',
-            'Noticeable Changes',
-            'Visible muscle definition, improved endurance',
-            Colors.orange,
-          ),
-          _buildTimelineItem(
-            'Week 7+',
-            'Transformation',
-            'Significant strength gains, body recomposition',
-            Colors.green,
-          ),
-
+          ...dynamicTimeline,
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.all(16),
@@ -548,6 +510,214 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
         ],
       ),
     );
+  }
+
+  List<Widget> _buildGoalSpecificResults() {
+    final goal = widget.recommendation.primaryGoal.toLowerCase();
+    final level = widget.recommendation.primaryLevel.toLowerCase();
+
+    // Adjust expectations based on level
+    double strengthMultiplier = level == 'beginner' ? 1.2 : (level == 'intermediate' ? 1.0 : 0.8);
+    double muscleMultiplier = level == 'beginner' ? 1.3 : (level == 'intermediate' ? 1.0 : 0.7);
+
+    if (goal.contains('strength') || goal.contains('power')) {
+      return [
+        _buildResultCard(
+          'Strength Gains',
+          '${(20 * strengthMultiplier).round()}-${(30 * strengthMultiplier).round()}%',
+          'Average increase in major lifts',
+          Icons.fitness_center,
+          Colors.red,
+        ),
+        _buildResultCard(
+          'Power Output',
+          '15-20%',
+          'Explosive strength improvements',
+          Icons.bolt,
+          Colors.orange,
+        ),
+        _buildResultCard(
+          'Muscle Density',
+          '${(2 * muscleMultiplier).round()}-${(4 * muscleMultiplier).round()} lbs',
+          'Dense, functional muscle mass',
+          Icons.accessibility_new,
+          Colors.blue,
+        ),
+      ];
+    } else if (goal.contains('muscle') || goal.contains('hypertrophy')) {
+      return [
+        _buildResultCard(
+          'Muscle Growth',
+          '${(3 * muscleMultiplier).round()}-${(7 * muscleMultiplier).round()} lbs',
+          'Lean muscle mass gained',
+          Icons.accessibility_new,
+          Colors.blue,
+        ),
+        _buildResultCard(
+          'Muscle Definition',
+          '40-60%',
+          'Increased muscle visibility',
+          Icons.visibility,
+          Colors.purple,
+        ),
+        _buildResultCard(
+          'Strength Gains',
+          '${(15 * strengthMultiplier).round()}-${(25 * strengthMultiplier).round()}%',
+          'Secondary benefit from training',
+          Icons.fitness_center,
+          Colors.red,
+        ),
+      ];
+    } else if (goal.contains('weight') || goal.contains('fat') || goal.contains('loss')) {
+      return [
+        _buildResultCard(
+          'Body Fat',
+          '-3-7%',
+          'Reduction in body fat percentage',
+          Icons.trending_down,
+          Colors.green,
+        ),
+        _buildResultCard(
+          'Weight Loss',
+          '8-15 lbs',
+          'Healthy sustainable fat loss',
+          Icons.monitor_weight,
+          Colors.teal,
+        ),
+        _buildResultCard(
+          'Muscle Retention',
+          '95-100%',
+          'Preserve lean muscle mass',
+          Icons.shield,
+          Colors.blue,
+        ),
+      ];
+    } else if (goal.contains('cardio') || goal.contains('endurance')) {
+      return [
+        _buildResultCard(
+          'VO2 Max',
+          '12-18%',
+          'Cardiovascular capacity improvement',
+          Icons.favorite,
+          Colors.red,
+        ),
+        _buildResultCard(
+          'Endurance',
+          '25-40%',
+          'Increased workout stamina',
+          Icons.timer,
+          Colors.orange,
+        ),
+        _buildResultCard(
+          'Recovery Speed',
+          '30-45%',
+          'Faster between-set recovery',
+          Icons.refresh,
+          Colors.green,
+        ),
+      ];
+    } else {
+      // General fitness or unknown goal
+      return [
+        _buildResultCard(
+          'Overall Fitness',
+          '20-35%',
+          'Comprehensive fitness improvement',
+          Icons.trending_up,
+          Colors.purple,
+        ),
+        _buildResultCard(
+          'Strength & Muscle',
+          '${(15 * strengthMultiplier).round()}-${(25 * strengthMultiplier).round()}%',
+          'Balanced strength and size gains',
+          Icons.fitness_center,
+          Colors.red,
+        ),
+        _buildResultCard(
+          'Body Composition',
+          '3-6%',
+          'Improved muscle-to-fat ratio',
+          Icons.analytics,
+          Colors.blue,
+        ),
+      ];
+    }
+  }
+
+  List<Widget> _buildDynamicTimeline() {
+    final weeks = widget.recommendation.programLength;
+    final level = widget.recommendation.primaryLevel.toLowerCase();
+
+    if (weeks <= 4) {
+      // Short programs
+      return [
+        _buildTimelineItem(
+          'Week 1',
+          'Quick Start',
+          level == 'beginner' ? 'Form mastery and initial adaptation' : 'Rapid strength activation',
+          Colors.blue,
+        ),
+        _buildTimelineItem(
+          'Week 2-3',
+          'Progressive Gains',
+          'Noticeable improvements in performance',
+          Colors.orange,
+        ),
+        _buildTimelineItem(
+          'Week 4',
+          'Peak Performance',
+          'Maximum output and visible changes',
+          Colors.green,
+        ),
+      ];
+    } else if (weeks <= 8) {
+      // Medium programs
+      return [
+        _buildTimelineItem(
+          'Week 1-2',
+          'Foundation Phase',
+          'Neural adaptation and movement patterns',
+          Colors.blue,
+        ),
+        _buildTimelineItem(
+          'Week 3-5',
+          'Growth Phase',
+          'Visible muscle development and strength gains',
+          Colors.orange,
+        ),
+        _buildTimelineItem(
+          'Week 6-8',
+          'Peak Phase',
+          'Maximum results and performance',
+          Colors.green,
+        ),
+      ];
+    } else {
+      // Long programs (8+ weeks)
+      final midPoint = (weeks / 2).round();
+      final peakPoint = ((weeks * 0.75).round());
+
+      return [
+        _buildTimelineItem(
+          'Week 1-$midPoint',
+          'Foundation Building',
+          'Systematic strength and muscle development',
+          Colors.blue,
+        ),
+        _buildTimelineItem(
+          'Week ${midPoint + 1}-$peakPoint',
+          'Acceleration Phase',
+          'Rapid gains and body transformation',
+          Colors.orange,
+        ),
+        _buildTimelineItem(
+          'Week ${peakPoint + 1}-$weeks',
+          'Peak & Consolidation',
+          'Maximum results and strength solidification',
+          Colors.green,
+        ),
+      ];
+    }
   }
 
 
