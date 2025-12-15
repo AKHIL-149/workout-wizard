@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/session_service.dart';
 import 'onboarding_wizard_screen.dart';
-import 'home_screen.dart';
+import 'main_navigation_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       MaterialPageRoute(
         builder: (_) => sessionService.isNewUser
             ? const OnboardingWizardScreen()
-            : const HomeScreen(),
+            : const MainNavigationScreen(),
       ),
     );
   }

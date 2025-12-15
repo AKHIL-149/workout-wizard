@@ -4,7 +4,7 @@ import '../services/session_service.dart';
 import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
 import '../services/storage_service.dart';
-import 'recommendation_form_screen.dart';
+import 'main_navigation_screen.dart';
 
 /// Multi-step onboarding wizard for new users
 class OnboardingWizardScreen extends StatefulWidget {
@@ -71,11 +71,11 @@ class _OnboardingWizardScreenState extends State<OnboardingWizardScreen> {
 
     if (!mounted) return;
 
-    // Navigate to main form
+    // Navigate to main app with navigation
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const RecommendationFormScreen(),
+        builder: (context) => const MainNavigationScreen(),
       ),
     );
   }
