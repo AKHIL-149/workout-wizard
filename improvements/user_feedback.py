@@ -11,6 +11,8 @@ from enum import Enum
 import json
 import os
 import tempfile
+import shutil
+from pathlib import Path
 
 
 class FeedbackType(Enum):
@@ -162,7 +164,15 @@ class UserFeedbackSystem:
         return [program_id for program_id, _ in trending[:n]]
     
     def save_feedback(self):
-        """Persist feedback to storage using atomic write."""
+        """Persist feedback to storage using atomic write with automatic backup."""
+        # Create backup of existing file before writing
+        if os.path.exists(self.storage_path):
+            backup_path = f"{self.storage_path}.backup"
+            try:
+                shutil.copy2(self.storage_path, backup_path)
+            except Exception:
+                pass  # Backup is best-effort
+
         # Write to temporary file first
         dir_name = os.path.dirname(self.storage_path) or '.'
         fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.json')
@@ -182,14 +192,25 @@ class UserFeedbackSystem:
             raise
     
     def load_feedback(self):
-        """Load feedback from storage."""
+        """Load feedback from storage with automatic backup recovery."""
         try:
             with open(self.storage_path, 'r') as f:
                 self.feedback_data = json.load(f)
         except FileNotFoundError:
             self.feedback_data = {}
         except (json.JSONDecodeError, IOError, PermissionError) as e:
-            # Handle corrupted files or permission issues
+            # Try to restore from backup if main file is corrupted
+            backup_path = f"{self.storage_path}.backup"
+            if os.path.exists(backup_path):
+                try:
+                    with open(backup_path, 'r') as f:
+                        self.feedback_data = json.load(f)
+                    # Restore the main file from backup
+                    shutil.copy2(backup_path, self.storage_path)
+                    return
+                except Exception:
+                    pass
+            # If backup recovery fails, reset to empty
             self.feedback_data = {}
             raise RuntimeError(f"Failed to load feedback data: {e}")
 

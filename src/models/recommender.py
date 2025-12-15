@@ -21,6 +21,7 @@ import numpy as np
 import hashlib
 from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
+from datetime import datetime, timedelta
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.neighbors import NearestNeighbors
 
@@ -75,8 +76,10 @@ class FitnessRecommender:
         self.collab_weight = DEFAULT_COLLAB_WEIGHT
         self.model_loaded = False
         
-        # Simple LRU cache to speed up repeated queries
+        # Cache with TTL to speed up repeated queries and prevent stale data
         self._cache = {}
+        self._cache_timestamps = {}  # Track when cache entries were created
+        self._cache_ttl = timedelta(hours=1)  # Cache entries expire after 1 hour
         self._cache_hits = 0
         self._cache_misses = 0
         
@@ -344,10 +347,18 @@ class FitnessRecommender:
         if use_cache:
             cache_key = self._get_cache_key(user_profile)
             if cache_key in self._cache:
-                self._cache_hits += 1
-                logger.info(f"Cache HIT! (hits: {self._cache_hits}, misses: {self._cache_misses})")
-                # Return cached results limited to requested number
-                return self._cache[cache_key].head(num_recommendations).copy()
+                # Check if cache entry is still valid (not expired)
+                cache_time = self._cache_timestamps.get(cache_key)
+                if cache_time and datetime.now() - cache_time < self._cache_ttl:
+                    self._cache_hits += 1
+                    logger.info(f"Cache HIT! (hits: {self._cache_hits}, misses: {self._cache_misses})")
+                    # Return cached results limited to requested number
+                    return self._cache[cache_key].head(num_recommendations).copy()
+                else:
+                    # Cache entry expired, remove it
+                    logger.info("Cache entry expired, refreshing...")
+                    del self._cache[cache_key]
+                    del self._cache_timestamps[cache_key]
             self._cache_misses += 1
         
         logger.info(f"Generating recommendations (enhancements: {ENHANCEMENTS_AVAILABLE})")
@@ -450,14 +461,17 @@ class FitnessRecommender:
         
         result = recommended_programs[result_columns].head(num_recommendations)
         
-        # Store results in cache for next time
+        # Store results in cache for next time with timestamp
         if use_cache:
             cache_key = self._get_cache_key(user_profile)
             self._cache[cache_key] = result.copy()
+            self._cache_timestamps[cache_key] = datetime.now()
             # Simple LRU: remove oldest entry if cache gets too big
             if len(self._cache) > 1000:
                 oldest_key = next(iter(self._cache))
                 del self._cache[oldest_key]
+                if oldest_key in self._cache_timestamps:
+                    del self._cache_timestamps[oldest_key]
         
         logger.info(f"Generated {len(result)} recommendations")
         return result

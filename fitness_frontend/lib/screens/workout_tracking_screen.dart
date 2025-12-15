@@ -166,8 +166,8 @@ class _WorkoutTrackingScreenState extends State<WorkoutTrackingScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.8),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.8),
             ],
           ),
           borderRadius: BorderRadius.circular(16),
@@ -200,7 +200,7 @@ class _WorkoutTrackingScreenState extends State<WorkoutTrackingScreen> {
             const SizedBox(height: 12),
             LinearProgressIndicator(
               value: progress,
-              backgroundColor: Colors.white.withOpacity(0.3),
+              backgroundColor: Colors.white.withValues(alpha: 0.3),
               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),
@@ -276,8 +276,8 @@ class _WorkoutTrackingScreenState extends State<WorkoutTrackingScreen> {
                   height: 50,
                   decoration: BoxDecoration(
                     color: isCompleted
-                        ? Colors.green.withOpacity(0.2)
-                        : Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                        ? Colors.green.withValues(alpha: 0.2)
+                        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(

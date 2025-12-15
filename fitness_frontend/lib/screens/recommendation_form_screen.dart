@@ -206,7 +206,7 @@ class _RecommendationFormScreenState extends State<RecommendationFormScreen> {
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: goalOption.color.withOpacity(0.3),
+                                  color: goalOption.color.withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -390,7 +390,7 @@ class _RecommendationFormScreenState extends State<RecommendationFormScreen> {
                       ? []
                       : [
                           BoxShadow(
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),

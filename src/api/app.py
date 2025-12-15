@@ -12,6 +12,8 @@ from typing import Dict, Any
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+import os
+import shutil
 
 from src.config import API_TITLE, API_VERSION, API_DESCRIPTION, CORS_ORIGINS, ENVIRONMENT, USER_FEEDBACK_FILE
 from src.data.schemas import (
@@ -165,11 +167,28 @@ async def root(request: Request):
 @app.get("/health", response_model=HealthCheck)
 @limiter.limit("300/minute")
 async def health_check(request: Request):
-    """Health check endpoint."""
+    """Enhanced health check endpoint with system metrics."""
+    # Check feedback file accessibility
+    feedback_exists = os.path.exists(USER_FEEDBACK_FILE)
+
+    # Get disk usage
+    disk_usage = None
+    try:
+        disk_stat = shutil.disk_usage("/")
+        disk_usage = (disk_stat.used / disk_stat.total) * 100
+    except Exception:
+        pass
+
+    # Get cache size
+    cache_size = len(recommender._cache) if hasattr(recommender, '_cache') else 0
+
     return HealthCheck(
-        status="healthy" if recommender.model_loaded else "degraded",
+        status="healthy" if recommender.model_loaded and feedback_exists else "degraded",
         version=API_VERSION,
-        model_loaded=recommender.model_loaded
+        model_loaded=recommender.model_loaded,
+        feedback_file_exists=feedback_exists,
+        disk_usage_percent=disk_usage,
+        cache_size=cache_size
     )
 
 

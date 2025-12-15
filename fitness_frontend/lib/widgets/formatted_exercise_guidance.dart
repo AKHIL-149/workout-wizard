@@ -134,7 +134,7 @@ class FormattedExerciseGuidance extends StatelessWidget {
 
     switch (section.level) {
       case 2:
-        backgroundColor = Theme.of(context).colorScheme.primary.withOpacity(0.1);
+        backgroundColor = Theme.of(context).colorScheme.primary.withValues(alpha: 0.1);
         textColor = Theme.of(context).colorScheme.primary;
         fontSize = 18;
         icon = Icons.fitness_center;
@@ -164,7 +164,7 @@ class FormattedExerciseGuidance extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: textColor.withOpacity(0.3),
+          color: textColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

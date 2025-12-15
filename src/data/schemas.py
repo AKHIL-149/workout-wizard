@@ -200,6 +200,9 @@ class HealthCheck(BaseModel):
     status: str
     version: str
     model_loaded: bool
+    feedback_file_exists: bool = Field(default=False, description="Whether feedback storage is accessible")
+    disk_usage_percent: Optional[float] = Field(default=None, description="Disk usage percentage")
+    cache_size: int = Field(default=0, description="Number of cached recommendations")
 
 
 class FeedbackRequest(BaseModel):

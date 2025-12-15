@@ -97,7 +97,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -123,7 +123,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                 Text(
                                   'Based on your preferences',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     fontSize: 13,
                                   ),
                                 ),
@@ -177,7 +177,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         Text(
                           '+${widget.userProfile.goals.length - 3} more goals',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 12,
                             fontStyle: FontStyle.italic,
                           ),
@@ -312,7 +312,7 @@ class ProgramCard extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -383,10 +383,10 @@ class ProgramCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.tertiary.withOpacity(0.1),
+                        color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
+                          color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
@@ -504,7 +504,7 @@ class ProgramCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.orange.withOpacity(0.3),
+                      color: Colors.orange.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

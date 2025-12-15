@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                     child: Icon(
                       Icons.fitness_center,
                       size: 200,
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                     ),
                   ),
                 ],
@@ -186,7 +186,7 @@ class _FeatureCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
