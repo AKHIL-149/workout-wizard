@@ -161,9 +161,9 @@ void main() {
       await sessionService.initialize();
     });
 
-    test('initialize() generates device ID', () async {
-      expect(sessionService.deviceId, isNotEmpty);
-      expect(sessionService.deviceId, isNot(equals('unknown')));
+    test('initialize() generates user ID', () async {
+      expect(sessionService.userId, isNotEmpty);
+      expect(sessionService.userId, isNot(equals('unknown')));
     });
 
     test('isNewUser returns true for first launch', () async {
@@ -171,30 +171,33 @@ void main() {
       expect(sessionService.isNewUser, isTrue);
     });
 
-    test('totalLaunches increments on each initialization', () async {
-      final firstCount = sessionService.totalLaunches;
+    test('sessionCount increments on each initialization', () async {
+      final firstCount = sessionService.sessionCount;
 
       // Reinitialize to simulate app restart
       await sessionService.initialize();
-      expect(sessionService.totalLaunches, greaterThan(firstCount));
+      expect(sessionService.sessionCount, greaterThan(firstCount));
     });
 
-    test('currentStreak starts at 0', () {
-      expect(sessionService.currentStreak, equals(0));
+    test('isReturningUser works correctly', () async {
+      // After first init, sessionCount is 1 (new user)
+      // After second init, sessionCount is 2 (returning user)
+      await sessionService.initialize();
+      expect(sessionService.isReturningUser, isTrue);
     });
 
-    test('deviceId persists across sessions', () async {
-      final firstDeviceId = sessionService.deviceId;
+    test('userId persists across sessions', () async {
+      final firstUserId = sessionService.userId;
 
       // Simulate new session
       final newSessionService = SessionService();
       await newSessionService.initialize();
 
-      expect(newSessionService.deviceId, equals(firstDeviceId));
+      expect(newSessionService.userId, equals(firstUserId));
     });
 
-    test('lastSeenVersion is recorded', () {
-      expect(sessionService.lastSeenVersion, isNotEmpty);
+    test('timeBasedGreeting returns value', () {
+      expect(sessionService.timeBasedGreeting, isNotEmpty);
     });
   });
 
@@ -260,12 +263,15 @@ void main() {
       final recommendation = Recommendation(
         programId: 'FP000001',
         title: 'Test Program',
-        primaryLevel: 'Intermediate',
-        primaryGoal: 'Strength',
+        description: 'Test description',
+        level: ['Intermediate'],
+        goal: ['Strength'],
         equipment: 'Full Gym',
         programLength: 12,
         timePerWorkout: 60,
+        totalExercises: 30,
         workoutFrequency: 4,
+        exerciseGuidance: 'Follow along',
         matchPercentage: 95,
       );
 

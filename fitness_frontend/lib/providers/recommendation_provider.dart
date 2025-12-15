@@ -29,17 +29,15 @@ class RecommendationProvider with ChangeNotifier {
   ///
   /// This method fetches recommendations using the hybrid recommender service
   /// and updates the provider state accordingly.
-  Future<void> fetchRecommendations(UserProfile profile, {int numRecommendations = 5}) async {
+  Future<void> fetchRecommendations(UserProfile profile) async {
     _isLoading = true;
     _error = null;
     _currentProfile = profile;
     notifyListeners();
 
     try {
-      final results = await _recommenderService.getRecommendations(
-        profile,
-        numRecommendations: numRecommendations,
-      );
+      final result = await _recommenderService.getRecommendations(profile);
+      final results = result.recommendations;
 
       _recommendations = results;
       _isLoading = false;

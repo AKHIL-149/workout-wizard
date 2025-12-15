@@ -126,13 +126,13 @@ void main() {
 
       // Record session info
       final sessionService = SessionService();
-      final initialLaunchCount = sessionService.totalLaunches;
+      final initialSessionCount = sessionService.sessionCount;
 
       // Simulate app restart by reinitializing
       await sessionService.initialize();
 
-      // Launch count should increment
-      expect(sessionService.totalLaunches, greaterThanOrEqualTo(initialLaunchCount));
+      // Session count should increment
+      expect(sessionService.sessionCount, greaterThanOrEqualTo(initialSessionCount));
     });
 
     testWidgets('Storage service saves and retrieves data', (WidgetTester tester) async {
@@ -185,7 +185,7 @@ void main() {
       // Services should be accessible (singleton pattern)
       expect(storageService, isNotNull);
       expect(sessionService, isNotNull);
-      expect(sessionService.deviceId, isNotEmpty);
+      expect(sessionService.userId, isNotEmpty);
     });
   });
 }

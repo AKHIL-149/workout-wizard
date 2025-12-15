@@ -27,8 +27,8 @@ class UserProvider with ChangeNotifier {
   List<String> get searchHistory => _searchHistory;
   bool get isLoading => _isLoading;
   bool get hasProfile => _profile != null;
-  String get deviceId => _sessionService.deviceId;
-  int get currentStreak => _sessionService.currentStreak;
+  String get userId => _sessionService.userId;
+  int get sessionCount => _sessionService.sessionCount;
   bool get isNewUser => _sessionService.isNewUser;
 
   /// Initialize user provider with stored data.
