@@ -13,8 +13,18 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.api.app import app
+from src.api.app import app, recommender
 from src.data.schemas import UserProfile
+
+
+@pytest.fixture(scope="module", autouse=True)
+def load_model():
+    """Load the model before running tests."""
+    try:
+        recommender.load_model()
+        yield
+    except Exception as e:
+        pytest.skip(f"Skipping tests - model not available: {e}")
 
 
 @pytest.fixture

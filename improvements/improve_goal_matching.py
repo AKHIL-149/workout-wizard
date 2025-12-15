@@ -171,8 +171,8 @@ class SemanticGoalMatcher:
             vectors = self.vectorizer.fit_transform([user_text, program_text])
             similarity = cosine_similarity(vectors[0:1], vectors[1:2])[0][0]
             return float(similarity)
-        except:
-            # Return 0 if vectorization fails
+        except (ValueError, IndexError):
+            # Return 0 if vectorization fails (empty text or invalid input)
             return 0.0
 
 

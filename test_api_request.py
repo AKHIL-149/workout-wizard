@@ -93,7 +93,7 @@ def test_basic_request():
                 error_data = response.json()
                 print(f"\nError details:")
                 print(json.dumps(error_data, indent=2))
-            except:
+            except (json.JSONDecodeError, ValueError):
                 print(f"\nResponse: {response.text}")
             return False
             

@@ -23,6 +23,7 @@ FITNESS_PROGRAMS_JSON = PROJECT_ROOT / "fitness_program.json"
 FITNESS_USERS_JSON = PROJECT_ROOT / "fitness_users.json"
 PROCESSED_PROGRAMS_CSV = PROJECT_ROOT / "processed_programs.csv"
 PROGRAM_FEATURES_CSV = PROJECT_ROOT / "program_features.csv"
+USER_FEEDBACK_FILE = Path(os.getenv("USER_FEEDBACK_FILE", str(DATA_DIR / "user_feedback.json")))
 
 # Model file paths
 MODEL_FILE = MODELS_DIR / "fitness_recommendation_model.joblib"
@@ -118,7 +119,15 @@ DEV_CORS_ORIGINS: List[str] = [
 PROD_CORS_ORIGINS: List[str] = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
 
 # Choose CORS origins based on environment
-CORS_ORIGINS: List[str] = PROD_CORS_ORIGINS if ENVIRONMENT == "production" and PROD_CORS_ORIGINS else DEV_CORS_ORIGINS
+if ENVIRONMENT == "production":
+    if not PROD_CORS_ORIGINS:
+        raise ValueError(
+            "ALLOWED_ORIGINS environment variable must be set in production. "
+            "Example: ALLOWED_ORIGINS=https://myapp.com,https://www.myapp.com"
+        )
+    CORS_ORIGINS: List[str] = PROD_CORS_ORIGINS
+else:
+    CORS_ORIGINS: List[str] = DEV_CORS_ORIGINS
 
 # Logging settings
 LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")

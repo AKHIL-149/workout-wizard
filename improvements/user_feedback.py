@@ -9,6 +9,8 @@ from typing import List, Dict, Optional
 from datetime import datetime
 from enum import Enum
 import json
+import os
+import tempfile
 
 
 class FeedbackType(Enum):
@@ -160,9 +162,24 @@ class UserFeedbackSystem:
         return [program_id for program_id, _ in trending[:n]]
     
     def save_feedback(self):
-        """Persist feedback to storage."""
-        with open(self.storage_path, 'w') as f:
-            json.dump(self.feedback_data, f, indent=2)
+        """Persist feedback to storage using atomic write."""
+        # Write to temporary file first
+        dir_name = os.path.dirname(self.storage_path) or '.'
+        fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.json')
+
+        try:
+            with os.fdopen(fd, 'w') as f:
+                json.dump(self.feedback_data, f, indent=2)
+
+            # Atomically replace the original file
+            os.replace(tmp_path, self.storage_path)
+        except Exception:
+            # Clean up temporary file if write fails
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
     
     def load_feedback(self):
         """Load feedback from storage."""
@@ -171,6 +188,10 @@ class UserFeedbackSystem:
                 self.feedback_data = json.load(f)
         except FileNotFoundError:
             self.feedback_data = {}
+        except (json.JSONDecodeError, IOError, PermissionError) as e:
+            # Handle corrupted files or permission issues
+            self.feedback_data = {}
+            raise RuntimeError(f"Failed to load feedback data: {e}")
 
 
 # API endpoints to add to FastAPI

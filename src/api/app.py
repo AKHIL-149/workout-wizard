@@ -4,13 +4,16 @@ Provides REST API endpoints for generating recommendations.
 """
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from typing import Dict, Any
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
-from src.config import API_TITLE, API_VERSION, API_DESCRIPTION, CORS_ORIGINS, ENVIRONMENT
+from src.config import API_TITLE, API_VERSION, API_DESCRIPTION, CORS_ORIGINS, ENVIRONMENT, USER_FEEDBACK_FILE
 from src.data.schemas import (
     RecommendationRequest,
     RecommendationResponse,
@@ -33,11 +36,34 @@ from improvements.user_feedback import UserFeedbackSystem, FeedbackType
 
 logger = get_logger(__name__)
 
+
+def safe_int(value, default: int = 0) -> int:
+    """
+    Safely convert a value to int, handling NaN, None, and invalid values.
+
+    Args:
+        value: Value to convert
+        default: Default value if conversion fails
+
+    Returns:
+        Integer value or default
+    """
+    try:
+        if value is None or (isinstance(value, float) and value != value):  # Check for NaN
+            return default
+        return int(float(value))
+    except (ValueError, TypeError):
+        return default
+
+
 # Initialize recommender (will be loaded on startup)
 recommender = FitnessRecommender()
 
 # Initialize feedback system
-feedback_system = UserFeedbackSystem("data/user_feedback.json")
+feedback_system = UserFeedbackSystem(str(USER_FEEDBACK_FILE))
+
+# Initialize rate limiter
+limiter = Limiter(key_func=get_remote_address)
 
 
 @asynccontextmanager
@@ -83,6 +109,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Add rate limiter state and exception handler
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # Add CORS middleware with environment-based configuration
 app.add_middleware(
     CORSMiddleware,
@@ -122,7 +152,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 @app.get("/", response_model=Dict[str, str])
-async def root():
+@limiter.limit("300/minute")
+async def root(request: Request):
     """Root endpoint."""
     return {
         "message": "Fitness Recommendation System API",
@@ -132,7 +163,8 @@ async def root():
 
 
 @app.get("/health", response_model=HealthCheck)
-async def health_check():
+@limiter.limit("300/minute")
+async def health_check(request: Request):
     """Health check endpoint."""
     return HealthCheck(
         status="healthy" if recommender.model_loaded else "degraded",
@@ -142,7 +174,8 @@ async def health_check():
 
 
 @app.get("/version")
-async def get_version():
+@limiter.limit("300/minute")
+async def get_version(request: Request):
     """Get API version and compatibility information."""
     return {
         "api_version": API_VERSION,
@@ -168,7 +201,8 @@ async def get_version():
 
 
 @app.post("/recommend", response_model=RecommendationResponse)
-async def get_recommendations(request: RecommendationRequest):
+@limiter.limit("100/minute")
+async def get_recommendations(request: Request, rec_request: RecommendationRequest):
     """
     Generate personalized fitness program recommendations.
     
@@ -187,15 +221,15 @@ async def get_recommendations(request: RecommendationRequest):
     
     try:
         logger.info("Processing recommendation request")
-        
+
         # Generate recommendations
         recommendations_df = recommender.recommend(
-            user_profile=request.user_profile,
-            num_recommendations=request.num_recommendations,
-            content_weight=request.content_weight,
-            collab_weight=request.collab_weight
+            user_profile=rec_request.user_profile,
+            num_recommendations=rec_request.num_recommendations,
+            content_weight=rec_request.content_weight,
+            collab_weight=rec_request.collab_weight
         )
-        
+
         # Convert to response format
         recommendations = []
         for _, row in recommendations_df.iterrows():
@@ -206,16 +240,16 @@ async def get_recommendations(request: RecommendationRequest):
                     primary_level=row['primary_level'],
                     primary_goal=row['primary_goal'],
                     equipment=row['equipment'],
-                    program_length=int(row['program_length']),
-                    time_per_workout=int(row['time_per_workout']),
-                    workout_frequency=int(row['workout_frequency']),
-                    match_percentage=int(row['match_percentage'])
+                    program_length=safe_int(row['program_length']),
+                    time_per_workout=safe_int(row['time_per_workout']),
+                    workout_frequency=safe_int(row['workout_frequency']),
+                    match_percentage=safe_int(row['match_percentage'])
                 )
             )
-        
+
         response = RecommendationResponse(
             recommendations=recommendations,
-            user_profile=request.user_profile,
+            user_profile=rec_request.user_profile,
             num_results=len(recommendations)
         )
         
@@ -234,7 +268,8 @@ async def get_recommendations(request: RecommendationRequest):
 
 
 @app.post("/recommend/simple")
-async def get_recommendations_simple(user_profile: UserProfile):
+@limiter.limit("100/minute")
+async def get_recommendations_simple(request: Request, user_profile: UserProfile):
     """
     Simplified recommendation endpoint with default parameters.
     
@@ -263,7 +298,8 @@ async def get_recommendations_simple(user_profile: UserProfile):
 
 
 @app.post("/feedback", response_model=FeedbackResponse)
-async def submit_feedback(feedback: FeedbackRequest):
+@limiter.limit("200/minute")
+async def submit_feedback(request: Request, feedback: FeedbackRequest):
     """
     Submit user feedback on a program.
 
@@ -314,7 +350,8 @@ async def submit_feedback(feedback: FeedbackRequest):
 
 
 @app.get("/user/{user_id}/preferences", response_model=UserPreferencesResponse)
-async def get_user_preferences(user_id: str):
+@limiter.limit("100/minute")
+async def get_user_preferences(request: Request, user_id: str):
     """
     Get learned preferences for a specific user based on their feedback history.
 
@@ -345,7 +382,8 @@ async def get_user_preferences(user_id: str):
 
 
 @app.get("/trending", response_model=TrendingProgramsResponse)
-async def get_trending_programs(limit: int = 10):
+@limiter.limit("100/minute")
+async def get_trending_programs(request: Request, limit: int = Query(default=10, ge=1, le=100)):
     """
     Get trending programs based on user feedback across all users.
 
@@ -382,9 +420,9 @@ async def get_trending_programs(limit: int = 10):
                     primary_level=row['primary_level'],
                     primary_goal=row['primary_goal'],
                     equipment=row['equipment'],
-                    program_length=int(row['program_length']),
-                    time_per_workout=int(row['time_per_workout']),
-                    workout_frequency=int(row['workout_frequency']),
+                    program_length=safe_int(row['program_length']),
+                    time_per_workout=safe_int(row['time_per_workout']),
+                    workout_frequency=safe_int(row['workout_frequency']),
                     match_percentage=100  # Trending programs get 100% as placeholder
                 )
             )

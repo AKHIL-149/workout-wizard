@@ -346,7 +346,8 @@ class FitnessRecommender:
             if cache_key in self._cache:
                 self._cache_hits += 1
                 logger.info(f"Cache HIT! (hits: {self._cache_hits}, misses: {self._cache_misses})")
-                return self._cache[cache_key].copy()
+                # Return cached results limited to requested number
+                return self._cache[cache_key].head(num_recommendations).copy()
             self._cache_misses += 1
         
         logger.info(f"Generating recommendations (enhancements: {ENHANCEMENTS_AVAILABLE})")

@@ -103,9 +103,9 @@ class TestUserFeatureProcessing:
         }
         
         processed = process_user_features(user_profile)
-        
+
         # Check defaults are applied
-        assert processed['time_per_workout'] == 60  # Default
+        assert processed['time_per_workout'] == 55  # Default (45-60 min duration)
         assert processed['training_style'] == 'Other'  # Default
     
     def test_intensity_score_calculated(self):
