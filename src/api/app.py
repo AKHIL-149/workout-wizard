@@ -10,7 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from typing import Dict, Any
 
-from src.config import API_TITLE, API_VERSION, API_DESCRIPTION
+from src.config import API_TITLE, API_VERSION, API_DESCRIPTION, CORS_ORIGINS, ENVIRONMENT
 from src.data.schemas import (
     RecommendationRequest,
     RecommendationResponse,
@@ -64,14 +64,18 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Add CORS middleware
+# Add CORS middleware with environment-based configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
+
+# Log CORS configuration
+logger.info(f"CORS enabled for environment: {ENVIRONMENT}")
+logger.info(f"Allowed origins: {CORS_ORIGINS}")
 
 
 # Custom exception handler for validation errors

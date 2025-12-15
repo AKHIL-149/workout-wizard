@@ -2,12 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen.dart';
 import 'services/hybrid_recommender_service.dart';
+import 'services/session_service.dart';
+import 'services/analytics_service.dart';
+import 'services/gamification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize core services
+  await SessionService().initialize();
+  await AnalyticsService().initialize();
+  await GamificationService().initialize();
+
   // Initialize hybrid recommender (loads on-device program database)
   await HybridRecommenderService().initialize();
+
+  // Track app launch
+  await AnalyticsService().trackEvent(AnalyticsEvent.appOpened);
+  await GamificationService().recordActivity('app_opened');
 
   runApp(const FitnessRecommenderApp());
 }

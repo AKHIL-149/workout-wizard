@@ -1,25 +1,35 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import '../models/user_profile.dart';
 import '../models/recommendation.dart';
 
 class ApiService {
-  // Update this URL based on your environment
-  
-  // For web development (localhost):
-  // static const String baseUrl = 'http://localhost:8000';
-  
-  // For Android emulator (localhost from emulator's perspective):
-  // static const String baseUrl = 'http://10.0.2.2:8000';
-  
-  // For iOS simulator (localhost):
-  // static const String baseUrl = 'http://localhost:8000';
-  
-  // For physical device on same network (replace with your computer's IP):
-  // static const String baseUrl = 'http://192.168.1.XXX:8000';
-  
-  // For production (update after deploying to Render/Railway):
-  static const String baseUrl = 'http://10.0.2.2:8000'; // Default: Android emulator
+  // Environment-based API URL configuration
+  // Set via --dart-define=API_URL=http://your-api-url:8000 during build
+  // Or defaults to platform-specific localhost
+  static String get baseUrl {
+    // Check for environment variable first (production/staging)
+    const envUrl = String.fromEnvironment('API_URL');
+    if (envUrl.isNotEmpty) {
+      return envUrl;
+    }
+
+    // Platform-specific defaults for local development
+    if (kIsWeb) {
+      return 'http://localhost:8000';
+    } else if (Platform.isAndroid) {
+      return 'http://10.0.2.2:8000'; // Android emulator localhost
+    } else if (Platform.isIOS) {
+      return 'http://localhost:8000'; // iOS simulator localhost
+    } else {
+      return 'http://localhost:8000'; // Desktop/other platforms
+    }
+  }
+
+  // API timeout configuration
+  static const Duration requestTimeout = Duration(seconds: 30);
 
   // Get recommendations from the API
   Future<List<Recommendation>> getRecommendations(
@@ -27,13 +37,15 @@ class ApiService {
     int numRecommendations = 5,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/recommend/simple'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(profile.toJson()),
-      );
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/recommend/simple'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(profile.toJson()),
+          )
+          .timeout(requestTimeout);
 
       if (response.statusCode == 200) {
         final dynamic data = jsonDecode(response.body);
@@ -66,7 +78,9 @@ class ApiService {
   // Health check endpoint
   Future<bool> checkHealth() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/health'));
+      final response = await http
+          .get(Uri.parse('$baseUrl/health'))
+          .timeout(requestTimeout);
       return response.statusCode == 200;
     } catch (e) {
       return false;
@@ -76,7 +90,9 @@ class ApiService {
   // Get API info
   Future<Map<String, dynamic>> getApiInfo() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/'));
+      final response = await http
+          .get(Uri.parse('$baseUrl/'))
+          .timeout(requestTimeout);
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       }

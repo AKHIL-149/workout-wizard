@@ -97,9 +97,28 @@ API_PORT: int = int(os.getenv("API_PORT", "8000"))
 API_TITLE: str = "Fitness Recommendation System API"
 API_VERSION: str = "1.0.0"
 API_DESCRIPTION: str = """
-A machine learning-based recommendation system that provides personalized 
+A machine learning-based recommendation system that provides personalized
 workout programs based on individual fitness profiles, goals, and preferences.
 """
+
+# CORS settings
+ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+
+# Development CORS origins (localhost for testing)
+DEV_CORS_ORIGINS: List[str] = [
+    "http://localhost:3000",
+    "http://localhost:8080",
+    "http://localhost:5000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8080",
+    "http://10.0.2.2:8000",  # Android emulator
+]
+
+# Production CORS origins (set via environment variable)
+PROD_CORS_ORIGINS: List[str] = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
+
+# Choose CORS origins based on environment
+CORS_ORIGINS: List[str] = PROD_CORS_ORIGINS if ENVIRONMENT == "production" and PROD_CORS_ORIGINS else DEV_CORS_ORIGINS
 
 # Logging settings
 LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
