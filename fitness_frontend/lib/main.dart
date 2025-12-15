@@ -5,11 +5,13 @@ import 'services/hybrid_recommender_service.dart';
 import 'services/session_service.dart';
 import 'services/analytics_service.dart';
 import 'services/gamification_service.dart';
+import 'services/storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize core services
+  await StorageService().initialize();
   await SessionService().initialize();
   await AnalyticsService().initialize();
   await GamificationService().initialize();

@@ -17,6 +17,12 @@ class StorageService {
   static const String _viewedProgramsKey = 'viewed_programs';
   static const String _completedProgramsKey = 'completed_programs';
 
+  /// Initialize storage service by preloading SharedPreferences
+  Future<void> initialize() async {
+    // Pre-initialize SharedPreferences to improve first-access performance
+    await SharedPreferences.getInstance();
+  }
+
   /// Save user profile
   Future<void> saveUserProfile(UserProfile profile) async {
     final prefs = await SharedPreferences.getInstance();
