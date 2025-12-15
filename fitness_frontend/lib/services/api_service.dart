@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import '../models/user_profile.dart';
 import '../models/recommendation.dart';
+import '../models/api_response.dart';
 import '../utils/exceptions.dart';
 
 class ApiService {
@@ -153,6 +154,82 @@ class ApiService {
       return {};
     } catch (e) {
       return {};
+    }
+  }
+
+  // Get API version and check compatibility
+  Future<ApiVersion> getVersion() async {
+    try {
+      final response = await http
+          .get(Uri.parse('$baseUrl/version'))
+          .timeout(requestTimeout);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return ApiVersion.fromJson(data);
+      } else {
+        throw ServerException(
+          'Failed to get version',
+          statusCode: response.statusCode,
+        );
+      }
+    } on TimeoutException {
+      throw TimeoutException();
+    } on SocketException catch (e) {
+      throw NetworkException(
+        'Network connection failed',
+        details: e.message,
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Failed to get API version',
+        details: e.toString(),
+      );
+    }
+  }
+
+  // Check if API is compatible with current client version
+  Future<bool> checkCompatibility(String clientVersion) async {
+    try {
+      final version = await getVersion();
+      return version.isCompatibleWith(clientVersion);
+    } catch (e) {
+      return true;
+    }
+  }
+
+  // Get health status with typed response
+  Future<HealthCheckResponse> getHealthStatus() async {
+    try {
+      final response = await http
+          .get(Uri.parse('$baseUrl/health'))
+          .timeout(requestTimeout);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return HealthCheckResponse.fromJson(data);
+      } else {
+        throw ServerException(
+          'Health check failed',
+          statusCode: response.statusCode,
+        );
+      }
+    } on TimeoutException {
+      throw TimeoutException();
+    } on SocketException catch (e) {
+      throw NetworkException(
+        'Network connection failed',
+        details: e.message,
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Failed to check health',
+        details: e.toString(),
+      );
     }
   }
 }

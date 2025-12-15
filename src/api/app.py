@@ -122,6 +122,26 @@ async def health_check():
     )
 
 
+@app.get("/version")
+async def get_version():
+    """Get API version and compatibility information."""
+    return {
+        "api_version": API_VERSION,
+        "min_supported_client": "0.2.7",
+        "response_format": {
+            "recommend_simple": "List[Dict]",
+            "recommend": "RecommendationResponse"
+        },
+        "endpoints": [
+            {"path": "/", "method": "GET"},
+            {"path": "/health", "method": "GET"},
+            {"path": "/version", "method": "GET"},
+            {"path": "/recommend", "method": "POST"},
+            {"path": "/recommend/simple", "method": "POST"}
+        ]
+    }
+
+
 @app.post("/recommend", response_model=RecommendationResponse)
 async def get_recommendations(request: RecommendationRequest):
     """
