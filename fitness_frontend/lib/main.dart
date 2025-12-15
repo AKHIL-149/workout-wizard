@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'screens/splash_screen.dart';
 import 'services/hybrid_recommender_service.dart';
 import 'services/session_service.dart';
 import 'services/analytics_service.dart';
 import 'services/gamification_service.dart';
 import 'services/storage_service.dart';
+import 'providers/recommendation_provider.dart';
+import 'providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +34,14 @@ class FitnessRecommenderApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fitness Program Recommender',
-      debugShowCheckedModeBanner: false,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RecommendationProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()..initialize()),
+      ],
+      child: MaterialApp(
+        title: 'Fitness Program Recommender',
+        debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Color scheme - Modern fitness theme
         colorScheme: ColorScheme.fromSeed(
@@ -86,8 +94,9 @@ class FitnessRecommenderApp extends StatelessWidget {
         ),
         
         useMaterial3: true,
+        ),
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }

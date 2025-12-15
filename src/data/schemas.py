@@ -196,8 +196,78 @@ class RecommendationResponse(BaseModel):
 
 class HealthCheck(BaseModel):
     """Schema for health check response."""
-    
+
     status: str
     version: str
     model_loaded: bool
+
+
+class FeedbackRequest(BaseModel):
+    """Schema for user feedback submission."""
+
+    user_id: str = Field(
+        ...,
+        description="User identifier (anonymous ID if no auth)"
+    )
+    program_id: str = Field(
+        ...,
+        description="Program being rated"
+    )
+    feedback_type: str = Field(
+        ...,
+        description="Type of feedback: viewed, started, completed, liked, disliked, skipped, rated"
+    )
+    rating: Optional[int] = Field(
+        None,
+        ge=1,
+        le=5,
+        description="Optional explicit rating (1-5 scale)"
+    )
+
+    @field_validator('feedback_type')
+    @classmethod
+    def validate_feedback_type(cls, v: str) -> str:
+        """Validate feedback type is in allowed list."""
+        valid_types = ['viewed', 'started', 'completed', 'liked', 'disliked', 'skipped', 'rated']
+        if v not in valid_types:
+            raise ValueError(
+                f"feedback_type must be one of {valid_types}, got '{v}'"
+            )
+        return v
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "user_id": "user_123",
+                "program_id": "FP000001",
+                "feedback_type": "liked",
+                "rating": 5
+            }
+        }
+    }
+
+
+class FeedbackResponse(BaseModel):
+    """Schema for feedback submission response."""
+
+    status: str
+    message: str
+    user_id: str
+    program_id: str
+
+
+class UserPreferencesResponse(BaseModel):
+    """Schema for user preferences response."""
+
+    liked_programs: List[str]
+    completed_programs: List[str]
+    disliked_programs: List[str]
+    total_interactions: int
+
+
+class TrendingProgramsResponse(BaseModel):
+    """Schema for trending programs response."""
+
+    programs: List[ProgramRecommendation]
+    count: int
 
