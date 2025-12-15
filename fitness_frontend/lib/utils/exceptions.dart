@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 /// Base exception class for all app exceptions
@@ -120,7 +119,7 @@ AppException fromException(dynamic error) {
       details: error.message,
     );
   } else {
-    return AppException(
+    return UnknownException(
       error.toString(),
     );
   }

@@ -1,8 +1,6 @@
 /// API response models that match backend schema exactly
 library;
 
-import 'dart:convert';
-
 /// API version information
 class ApiVersion {
   final String apiVersion;

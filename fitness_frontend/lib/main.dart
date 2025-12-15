@@ -57,15 +57,7 @@ class FitnessRecommenderApp extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        
-        // Card theme
-        cardTheme: CardTheme(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        
+
         // Input decoration theme
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(

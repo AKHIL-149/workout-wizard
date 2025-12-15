@@ -70,22 +70,22 @@ class SessionService {
 
     try {
       if (kIsWeb) {
-        final webInfo = await deviceInfo.webBrowserInfo();
+        final webInfo = await deviceInfo.webBrowserInfo;
         deviceId = '${webInfo.userAgent}_${webInfo.vendor}_${webInfo.platform}';
       } else if (Platform.isAndroid) {
-        final androidInfo = await deviceInfo.androidInfo();
+        final androidInfo = await deviceInfo.androidInfo;
         deviceId = '${androidInfo.id}_${androidInfo.device}_${androidInfo.model}';
       } else if (Platform.isIOS) {
-        final iosInfo = await deviceInfo.iosInfo();
+        final iosInfo = await deviceInfo.iosInfo;
         deviceId = '${iosInfo.identifierForVendor}_${iosInfo.model}';
       } else if (Platform.isWindows) {
-        final windowsInfo = await deviceInfo.windowsInfo();
+        final windowsInfo = await deviceInfo.windowsInfo;
         deviceId = '${windowsInfo.computerName}_${windowsInfo.numberOfCores}';
       } else if (Platform.isMacOS) {
-        final macInfo = await deviceInfo.macOsInfo();
+        final macInfo = await deviceInfo.macOsInfo;
         deviceId = '${macInfo.computerName}_${macInfo.model}';
       } else if (Platform.isLinux) {
-        final linuxInfo = await deviceInfo.linuxInfo();
+        final linuxInfo = await deviceInfo.linuxInfo;
         deviceId = '${linuxInfo.id}_${linuxInfo.machineId}';
       }
     } catch (e) {
