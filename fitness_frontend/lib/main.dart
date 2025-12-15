@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 import 'services/hybrid_recommender_service.dart';
 import 'services/session_service.dart';
 import 'services/analytics_service.dart';
@@ -93,7 +93,7 @@ class FitnessRecommenderApp extends StatelessWidget {
         
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }
