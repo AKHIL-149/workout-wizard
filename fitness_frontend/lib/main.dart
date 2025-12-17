@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'screens/splash_screen.dart';
 import 'services/hybrid_recommender_service.dart';
 import 'services/session_service.dart';
@@ -12,6 +13,14 @@ import 'providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive for form correction data
+  await Hive.initFlutter();
+
+  // Open Hive boxes for form correction
+  await Hive.openBox<Map>('form_correction_sessions');
+  await Hive.openBox<Map>('form_correction_stats');
+  await Hive.openBox<Map>('form_correction_settings');
 
   // Initialize core services
   await StorageService().initialize();

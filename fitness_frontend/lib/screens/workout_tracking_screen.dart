@@ -3,6 +3,7 @@ import '../models/recommendation.dart';
 import '../services/active_program_service.dart';
 import '../services/analytics_service.dart';
 import '../widgets/formatted_exercise_guidance.dart';
+import 'form_correction_screen.dart';
 
 /// Screen for tracking workouts and viewing exercise guidance
 class WorkoutTrackingScreen extends StatefulWidget {
@@ -367,6 +368,16 @@ class _WorkoutTrackingScreenState extends State<WorkoutTrackingScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const Spacer(),
+            // Form Check button
+            ElevatedButton.icon(
+              onPressed: _startFormCorrection,
+              icon: const Icon(Icons.videocam, size: 18),
+              label: const Text('Form Check'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -553,6 +564,22 @@ class _WorkoutTrackingScreenState extends State<WorkoutTrackingScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _startFormCorrection() {
+    // Extract exercise name from program (use program name or first exercise)
+    String exerciseName = widget.program.title;
+
+    // Navigate to form correction screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FormCorrectionScreen(
+          exerciseName: exerciseName,
+          programId: widget.program.programId,
+        ),
       ),
     );
   }

@@ -1,0 +1,1397 @@
+{
+  "exercises": [
+    {
+      "id": "squat_barbell",
+      "name": "Barbell Squat",
+      "category": "squat",
+      "aliases": [
+        "squat",
+        "back squat",
+        "barbell squats",
+        "squats",
+        "bodyweight squat"
+      ],
+      "description": "A compound lower body exercise where you lower your hips from a standing position and then stand back up.",
+      "angleRules": [
+        {
+          "name": "knee_angle_bottom",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "SHALLOW_SQUAT",
+          "message": "Go deeper - aim for 90 degrees at the knee",
+          "severity": "warning"
+        },
+        {
+          "name": "back_angle",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP",
+            "LEFT_KNEE"
+          ],
+          "minDegrees": 140,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep your back straight and chest up",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "knee_over_toes",
+          "points": [
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.08,
+          "violationType": "KNEE_TOO_FORWARD",
+          "message": "Knees should stay aligned with toes",
+          "severity": "warning"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.15,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "front_squat",
+      "name": "Front Squat",
+      "category": "squat",
+      "aliases": [
+        "front squat",
+        "front squats",
+        "barbell front squat"
+      ],
+      "description": "Squat with barbell held in front rack position across shoulders.",
+      "angleRules": [
+        {
+          "name": "knee_angle_bottom",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "SHALLOW_SQUAT",
+          "message": "Squat to at least parallel depth",
+          "severity": "warning"
+        },
+        {
+          "name": "torso_angle",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_SHOULDER",
+            "LEFT_EAR"
+          ],
+          "minDegrees": 150,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "TORSO_LEAN",
+          "message": "Keep torso more upright than back squat",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "vertical_torso",
+          "points": [
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.12,
+          "violationType": "TORSO_LEAN",
+          "message": "Maintain upright torso position",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.15,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "goblet_squat",
+      "name": "Goblet Squat",
+      "category": "squat",
+      "aliases": [
+        "goblet squat",
+        "goblet squats",
+        "kettlebell squat",
+        "dumbbell goblet squat"
+      ],
+      "description": "Squat holding a dumbbell or kettlebell at chest level.",
+      "angleRules": [
+        {
+          "name": "knee_angle_bottom",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "SHALLOW_SQUAT",
+          "message": "Squat deep with good form",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "upright_torso",
+          "points": [
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.15,
+          "violationType": "TORSO_LEAN",
+          "message": "Keep chest up and torso upright",
+          "severity": "warning"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.15,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "lunge",
+      "name": "Lunge",
+      "category": "squat",
+      "aliases": [
+        "lunge",
+        "lunges",
+        "forward lunge",
+        "reverse lunge",
+        "walking lunge"
+      ],
+      "description": "Single-leg squat movement with split stance.",
+      "angleRules": [
+        {
+          "name": "front_knee_angle",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "minDegrees": 80,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "SHALLOW_SQUAT",
+          "message": "Lower until front thigh is parallel",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "knee_alignment",
+          "points": [
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.1,
+          "violationType": "KNEE_TOO_FORWARD",
+          "message": "Front knee should align with ankle",
+          "severity": "warning"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "deadlift",
+      "name": "Deadlift",
+      "category": "hinge",
+      "aliases": [
+        "deadlift",
+        "conventional deadlift",
+        "barbell deadlift",
+        "deadlifts"
+      ],
+      "description": "A hip-hinge movement where you lift a weight from the ground to hip level.",
+      "angleRules": [
+        {
+          "name": "back_angle_start",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP",
+            "LEFT_KNEE"
+          ],
+          "minDegrees": 150,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep your back straight throughout the lift",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "straight_back",
+          "points": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP"
+          ],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.04,
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain neutral spine",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.2,
+        "direction": "upThenDown",
+        "holdTimeMs": 300
+      }
+    },
+    {
+      "id": "romanian_deadlift",
+      "name": "Romanian Deadlift",
+      "category": "hinge",
+      "aliases": [
+        "rdl",
+        "romanian deadlift",
+        "stiff leg deadlift",
+        "straight leg deadlift"
+      ],
+      "description": "Hip hinge with minimal knee bend, emphasizing hamstrings.",
+      "angleRules": [
+        {
+          "name": "knee_angle",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "minDegrees": 160,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "EXCESSIVE_KNEE_BEND",
+          "message": "Keep knees slightly bent but mostly straight",
+          "severity": "warning"
+        },
+        {
+          "name": "back_angle",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP",
+            "LEFT_KNEE"
+          ],
+          "minDegrees": 150,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain neutral spine throughout",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.15,
+        "direction": "downThenUp",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "hip_thrust",
+      "name": "Hip Thrust",
+      "category": "hinge",
+      "aliases": [
+        "hip thrust",
+        "barbell hip thrust",
+        "glute bridge",
+        "hip thrusts"
+      ],
+      "description": "Horizontal hip extension exercise targeting glutes.",
+      "angleRules": [
+        {
+          "name": "hip_extension_top",
+          "joints": [
+            "LEFT_KNEE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "minDegrees": 165,
+          "maxDegrees": 185,
+          "phase": "top",
+          "violationType": "INCOMPLETE_HIP_EXTENSION",
+          "message": "Fully extend hips at the top",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "neutral_spine",
+          "points": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP"
+          ],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.06,
+          "violationType": "BACK_ROUNDING",
+          "message": "Avoid hyperextending lower back",
+          "severity": "warning"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "upThenDown",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "bench_press",
+      "name": "Bench Press",
+      "category": "horizontal_push",
+      "aliases": [
+        "bench press",
+        "barbell bench press",
+        "bench",
+        "chest press"
+      ],
+      "description": "A pushing movement where you lower a barbell to your chest and press it back up.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Lower the bar to touch your chest",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "downThenUp",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "pushup",
+      "name": "Push-up",
+      "category": "horizontal_push",
+      "aliases": [
+        "pushup",
+        "push-up",
+        "push up",
+        "pushups",
+        "press up"
+      ],
+      "description": "A bodyweight pushing exercise performed in a prone position.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Lower chest closer to the ground",
+          "severity": "warning"
+        },
+        {
+          "name": "body_plank",
+          "joints": [
+            "LEFT_ANKLE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep body in a straight line - engage core",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "straight_body",
+          "points": [
+            "LEFT_ANKLE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.05,
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain straight body position",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_SHOULDER",
+        "axis": "y",
+        "threshold": 0.1,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "dips",
+      "name": "Dips",
+      "category": "horizontal_push",
+      "aliases": [
+        "dips",
+        "dip",
+        "parallel bar dips",
+        "chest dips",
+        "tricep dips"
+      ],
+      "description": "Bodyweight exercise performed on parallel bars.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 75,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Lower until elbows are at 90 degrees",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_SHOULDER",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "overhead_press",
+      "name": "Overhead Press",
+      "category": "vertical_push",
+      "aliases": [
+        "overhead press",
+        "shoulder press",
+        "military press",
+        "ohp",
+        "barbell press"
+      ],
+      "description": "A vertical pressing movement where you press a barbell from shoulder height to overhead.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_top",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 165,
+          "maxDegrees": 185,
+          "phase": "top",
+          "violationType": "LOCKOUT_ISSUE",
+          "message": "Fully lock out arms overhead",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "bar_overhead_alignment",
+          "points": [
+            "LEFT_WRIST",
+            "LEFT_SHOULDER"
+          ],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.07,
+          "violationType": "IMPROPER_STARTING_POSITION",
+          "message": "Bar should be directly overhead at lockout",
+          "severity": "warning"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.18,
+        "direction": "upThenDown",
+        "holdTimeMs": 300
+      }
+    },
+    {
+      "id": "dumbbell_shoulder_press",
+      "name": "Dumbbell Shoulder Press",
+      "category": "vertical_push",
+      "aliases": [
+        "dumbbell press",
+        "db shoulder press",
+        "seated shoulder press",
+        "dumbbell overhead press"
+      ],
+      "description": "Vertical pressing with dumbbells allowing independent arm movement.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_top",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 165,
+          "maxDegrees": 185,
+          "phase": "top",
+          "violationType": "LOCKOUT_ISSUE",
+          "message": "Press dumbbells to full lockout",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.16,
+        "direction": "upThenDown",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "pike_pushup",
+      "name": "Pike Push-up",
+      "category": "vertical_push",
+      "aliases": [
+        "pike pushup",
+        "pike push-up",
+        "pike press",
+        "shoulder pushup"
+      ],
+      "description": "Bodyweight vertical pressing variation with hips elevated.",
+      "angleRules": [
+        {
+          "name": "hip_angle",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP",
+            "LEFT_ANKLE"
+          ],
+          "minDegrees": 45,
+          "maxDegrees": 90,
+          "phase": "all",
+          "violationType": "IMPROPER_STARTING_POSITION",
+          "message": "Maintain pike position throughout",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_SHOULDER",
+        "axis": "y",
+        "threshold": 0.1,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "barbell_row",
+      "name": "Barbell Row",
+      "category": "horizontal_pull",
+      "aliases": [
+        "barbell row",
+        "bent over row",
+        "bb row",
+        "bent-over row",
+        "pendlay row"
+      ],
+      "description": "Horizontal pulling movement with barbell.",
+      "angleRules": [
+        {
+          "name": "torso_angle",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_SHOULDER",
+            "LEFT_EAR"
+          ],
+          "minDegrees": 20,
+          "maxDegrees": 50,
+          "phase": "all",
+          "violationType": "TORSO_TOO_UPRIGHT",
+          "message": "Maintain forward lean, torso near parallel",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "neutral_spine",
+          "points": [
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.05,
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep back flat and neutral",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "upThenDown",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "dumbbell_row",
+      "name": "Dumbbell Row",
+      "category": "horizontal_pull",
+      "aliases": [
+        "dumbbell row",
+        "single arm row",
+        "one arm row",
+        "db row"
+      ],
+      "description": "Single-arm horizontal pull with dumbbell.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_top",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 40,
+          "maxDegrees": 70,
+          "phase": "top",
+          "violationType": "INCOMPLETE_PULL",
+          "message": "Pull elbow back past torso",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "upThenDown",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "pullup",
+      "name": "Pull-up",
+      "category": "vertical_pull",
+      "aliases": [
+        "pullup",
+        "pull-up",
+        "pull up",
+        "pullups",
+        "chin up",
+        "chinup"
+      ],
+      "description": "Bodyweight vertical pull to overhead bar.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_top",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 30,
+          "maxDegrees": 60,
+          "phase": "top",
+          "violationType": "INCOMPLETE_PULL",
+          "message": "Pull until chin clears the bar",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_SHOULDER",
+        "axis": "y",
+        "threshold": 0.15,
+        "direction": "upThenDown",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "lat_pulldown",
+      "name": "Lat Pulldown",
+      "category": "vertical_pull",
+      "aliases": [
+        "lat pulldown",
+        "pulldown",
+        "lateral pulldown",
+        "lat pull"
+      ],
+      "description": "Vertical pulling movement on cable machine.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 35,
+          "maxDegrees": 65,
+          "phase": "bottom",
+          "violationType": "INCOMPLETE_PULL",
+          "message": "Pull bar to upper chest",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.14,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "category": "core",
+      "aliases": [
+        "plank",
+        "front plank",
+        "forearm plank",
+        "high plank"
+      ],
+      "description": "Isometric core exercise maintaining straight body position.",
+      "angleRules": [
+        {
+          "name": "body_alignment",
+          "joints": [
+            "LEFT_ANKLE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "minDegrees": 165,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "HIP_SAG",
+          "message": "Keep body in straight line - engage core",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "straight_body",
+          "points": [
+            "LEFT_ANKLE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.04,
+          "violationType": "HIP_SAG",
+          "message": "Maintain neutral spine throughout hold",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.05,
+        "direction": "hold",
+        "holdTimeMs": 1000
+      }
+    },
+    {
+      "id": "side_plank",
+      "name": "Side Plank",
+      "category": "core",
+      "aliases": [
+        "side plank",
+        "lateral plank",
+        "sideplank"
+      ],
+      "description": "Lateral core stability exercise.",
+      "angleRules": [
+        {
+          "name": "body_alignment",
+          "joints": [
+            "LEFT_ANKLE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "minDegrees": 165,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "HIP_SAG",
+          "message": "Keep hips elevated and body straight",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.05,
+        "direction": "hold",
+        "holdTimeMs": 1000
+      }
+    },
+    {
+      "id": "dead_bug",
+      "name": "Dead Bug",
+      "category": "core",
+      "aliases": [
+        "dead bug",
+        "deadbug"
+      ],
+      "description": "Core stability exercise performed on back.",
+      "angleRules": [
+        {
+          "name": "hip_angle",
+          "joints": [
+            "LEFT_KNEE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "minDegrees": 80,
+          "maxDegrees": 100,
+          "phase": "all",
+          "violationType": "IMPROPER_FORM",
+          "message": "Maintain 90-degree hip angle",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.1,
+        "direction": "downThenUp",
+        "holdTimeMs": 500
+      }
+    },
+    {
+      "id": "bird_dog",
+      "name": "Bird Dog",
+      "category": "core",
+      "aliases": [
+        "bird dog",
+        "birddog",
+        "quadruped"
+      ],
+      "description": "Core stability exercise on hands and knees.",
+      "angleRules": [
+        {
+          "name": "back_neutral",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP",
+            "LEFT_KNEE"
+          ],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep spine neutral throughout",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "x",
+        "threshold": 0.12,
+        "direction": "hold",
+        "holdTimeMs": 500
+      }
+    },
+    {
+      "id": "bicep_curl",
+      "name": "Bicep Curl",
+      "category": "accessory",
+      "aliases": [
+        "bicep curl",
+        "biceps curl",
+        "curl",
+        "arm curl",
+        "dumbbell curl"
+      ],
+      "description": "Elbow flexion exercise targeting biceps.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_top",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 30,
+          "maxDegrees": 50,
+          "phase": "top",
+          "violationType": "INCOMPLETE_CURL",
+          "message": "Fully contract biceps at top",
+          "severity": "info"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.1,
+        "direction": "upThenDown",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "tricep_extension",
+      "name": "Tricep Extension",
+      "category": "accessory",
+      "aliases": [
+        "tricep extension",
+        "overhead extension",
+        "triceps extension"
+      ],
+      "description": "Elbow extension exercise targeting triceps.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 165,
+          "maxDegrees": 185,
+          "phase": "bottom",
+          "violationType": "LOCKOUT_ISSUE",
+          "message": "Fully extend elbows at bottom",
+          "severity": "info"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.1,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "lateral_raise",
+      "name": "Lateral Raise",
+      "category": "accessory",
+      "aliases": [
+        "lateral raise",
+        "side raise",
+        "dumbbell raise",
+        "shoulder raise"
+      ],
+      "description": "Shoulder abduction exercise targeting lateral deltoids.",
+      "angleRules": [
+        {
+          "name": "arm_raise_angle",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW"
+          ],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "top",
+          "violationType": "INCOMPLETE_RANGE",
+          "message": "Raise arms to shoulder height",
+          "severity": "info"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "upThenDown",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "face_pull",
+      "name": "Face Pull",
+      "category": "accessory",
+      "aliases": [
+        "face pull",
+        "facepull",
+        "cable face pull",
+        "rope pull"
+      ],
+      "description": "Upper back and rear delt exercise with cable.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_end",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 80,
+          "maxDegrees": 110,
+          "phase": "top",
+          "violationType": "INCOMPLETE_PULL",
+          "message": "Pull rope to face level with elbows high",
+          "severity": "info"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "x",
+        "threshold": 0.1,
+        "direction": "backThenForward",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "bulgarian_split_squat",
+      "name": "Bulgarian Split Squat",
+      "category": "squat",
+      "aliases": [
+        "bulgarian split squat",
+        "rear foot elevated split squat",
+        "split squat"
+      ],
+      "description": "Single-leg squat with rear foot elevated.",
+      "angleRules": [
+        {
+          "name": "front_knee_angle",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_KNEE",
+            "LEFT_ANKLE"
+          ],
+          "minDegrees": 80,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "SHALLOW_SQUAT",
+          "message": "Lower until front thigh is parallel",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "sumo_deadlift",
+      "name": "Sumo Deadlift",
+      "category": "hinge",
+      "aliases": [
+        "sumo deadlift",
+        "sumo",
+        "wide stance deadlift"
+      ],
+      "description": "Deadlift variation with wide stance and narrow grip.",
+      "angleRules": [
+        {
+          "name": "back_angle",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP",
+            "LEFT_KNEE"
+          ],
+          "minDegrees": 150,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain neutral spine",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.18,
+        "direction": "upThenDown",
+        "holdTimeMs": 300
+      }
+    },
+    {
+      "id": "incline_bench_press",
+      "name": "Incline Bench Press",
+      "category": "horizontal_push",
+      "aliases": [
+        "incline bench",
+        "incline press",
+        "incline barbell press"
+      ],
+      "description": "Bench press on inclined bench targeting upper chest.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_ELBOW",
+            "LEFT_WRIST"
+          ],
+          "minDegrees": 75,
+          "maxDegrees": 105,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Lower bar to upper chest",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "downThenUp",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "good_morning",
+      "name": "Good Morning",
+      "category": "hinge",
+      "aliases": [
+        "good morning",
+        "good mornings",
+        "barbell good morning"
+      ],
+      "description": "Hip hinge with barbell on back, emphasizing hamstrings and lower back.",
+      "angleRules": [
+        {
+          "name": "torso_angle_bottom",
+          "joints": [
+            "LEFT_HIP",
+            "LEFT_SHOULDER",
+            "LEFT_EAR"
+          ],
+          "minDegrees": 20,
+          "maxDegrees": 50,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Hinge forward to near parallel",
+          "severity": "warning"
+        },
+        {
+          "name": "back_neutral",
+          "joints": [
+            "LEFT_SHOULDER",
+            "LEFT_HIP",
+            "LEFT_KNEE"
+          ],
+          "minDegrees": 150,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep back flat throughout",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_SHOULDER",
+        "axis": "y",
+        "threshold": 0.14,
+        "direction": "downThenUp",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "inverted_row",
+      "name": "Inverted Row",
+      "category": "horizontal_pull",
+      "aliases": [
+        "inverted row",
+        "bodyweight row",
+        "australian pullup",
+        "horizontal row"
+      ],
+      "description": "Bodyweight horizontal pull under bar.",
+      "angleRules": [
+        {
+          "name": "body_straight",
+          "joints": [
+            "LEFT_ANKLE",
+            "LEFT_HIP",
+            "LEFT_SHOULDER"
+          ],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "HIP_SAG",
+          "message": "Maintain straight body throughout",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [],
+      "repDetection": {
+        "keyJoint": "LEFT_SHOULDER",
+        "axis": "y",
+        "threshold": 0.1,
+        "direction": "upThenDown",
+        "holdTimeMs": 200
+      }
+    }
+  ],
+  "violations": {
+    "KNEE_CAVE": {
+      "description": "Knees caving inward (valgus collapse)",
+      "correction": "Push knees outward, engage glutes and external rotators",
+      "severity": "critical"
+    },
+    "BACK_ROUNDING": {
+      "description": "Rounded spine detected",
+      "correction": "Engage core, keep chest up, maintain neutral spine",
+      "severity": "critical"
+    },
+    "SHALLOW_SQUAT": {
+      "description": "Not squatting deep enough",
+      "correction": "Lower hips until thighs are at least parallel to ground",
+      "severity": "warning"
+    },
+    "KNEE_TOO_FORWARD": {
+      "description": "Knees extending too far past toes",
+      "correction": "Sit back more, engage hips earlier in the movement",
+      "severity": "warning"
+    },
+    "INSUFFICIENT_DEPTH": {
+      "description": "Not reaching proper depth for the exercise",
+      "correction": "Increase range of motion, work on mobility if needed",
+      "severity": "warning"
+    },
+    "IMPROPER_STARTING_POSITION": {
+      "description": "Starting position is not optimal",
+      "correction": "Reset your setup - check bar position, stance, and body alignment",
+      "severity": "warning"
+    },
+    "ELBOW_FLARE": {
+      "description": "Elbows flaring out too much",
+      "correction": "Keep elbows at 45-degree angle to protect shoulders",
+      "severity": "warning"
+    },
+    "HEEL_LIFT": {
+      "description": "Heels lifting off the ground",
+      "correction": "Keep weight on midfoot and heels, improve ankle mobility",
+      "severity": "warning"
+    },
+    "HEAD_POSITION": {
+      "description": "Neck hyperextension or excessive flexion",
+      "correction": "Keep neck in neutral position, aligned with spine",
+      "severity": "info"
+    },
+    "ASYMMETRIC_MOVEMENT": {
+      "description": "Uneven movement on left and right sides",
+      "correction": "Focus on symmetrical movement, reduce weight if needed",
+      "severity": "warning"
+    },
+    "TOO_FAST_ECCENTRIC": {
+      "description": "Lowering weight too quickly",
+      "correction": "Control the descent - aim for 2-3 second negative",
+      "severity": "info"
+    },
+    "LOCKOUT_ISSUE": {
+      "description": "Not fully extending at the top",
+      "correction": "Complete the range of motion with full lockout",
+      "severity": "warning"
+    },
+    "GRIP_WIDTH": {
+      "description": "Hand placement may not be optimal",
+      "correction": "Adjust grip width for better biomechanics",
+      "severity": "info"
+    },
+    "TORSO_LEAN": {
+      "description": "Excessive forward or backward lean",
+      "correction": "Maintain more upright torso position",
+      "severity": "critical"
+    },
+    "HIP_SAG": {
+      "description": "Hips sagging below shoulder-ankle line",
+      "correction": "Engage core and glutes to maintain alignment",
+      "severity": "critical"
+    },
+    "INCOMPLETE_PULL": {
+      "description": "Not pulling through full range of motion",
+      "correction": "Pull until hands/bar reach target position",
+      "severity": "warning"
+    },
+    "INCOMPLETE_HIP_EXTENSION": {
+      "description": "Not fully extending hips at top",
+      "correction": "Squeeze glutes and drive hips forward completely",
+      "severity": "warning"
+    },
+    "EXCESSIVE_KNEE_BEND": {
+      "description": "Too much knee flexion for this movement",
+      "correction": "Keep knees straighter, focus on hip hinge",
+      "severity": "warning"
+    },
+    "TORSO_TOO_UPRIGHT": {
+      "description": "Torso not leaning forward enough",
+      "correction": "Hinge at hips to achieve proper torso angle",
+      "severity": "warning"
+    },
+    "INCOMPLETE_CURL": {
+      "description": "Not achieving full muscle contraction",
+      "correction": "Focus on peak contraction at top of movement",
+      "severity": "info"
+    },
+    "INCOMPLETE_RANGE": {
+      "description": "Movement not reaching full range",
+      "correction": "Complete the full movement pattern",
+      "severity": "info"
+    },
+    "IMPROPER_FORM": {
+      "description": "General form breakdown detected",
+      "correction": "Reset and focus on proper technique",
+      "severity": "warning"
+    }
+  }
+}

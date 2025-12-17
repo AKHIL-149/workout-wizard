@@ -58,3 +58,7 @@ test_feedback.json
 *.tmp
 *.bak
 texput.log
+
+# TensorFlow Lite models (too large for git)
+fitness_frontend/assets/models/*.tflite
+*.tflite

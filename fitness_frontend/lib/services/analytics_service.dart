@@ -14,6 +14,12 @@ enum AnalyticsEvent {
   achievementUnlocked,
   workoutCompleted,
   programStarted,
+  // Form correction events
+  formCorrectionStarted,
+  formCorrectionCompleted,
+  formViolationDetected,
+  formScoreRecorded,
+  exerciseFormImproved,
 }
 
 /// User action data model
@@ -85,6 +91,14 @@ class AnalyticsService {
 
     // Update preferences based on actions
     _updatePreferences(event, metadata);
+  }
+
+  /// Log an event (alias for trackEvent)
+  Future<void> logEvent(
+    AnalyticsEvent event, {
+    Map<String, dynamic>? parameters,
+  }) async {
+    await trackEvent(event, metadata: parameters);
   }
 
   /// Load actions from storage

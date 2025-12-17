@@ -1,0 +1,460 @@
+{
+  "exercises": [
+    {
+      "id": "squat_barbell",
+      "name": "Barbell Squat",
+      "aliases": [
+        "squat",
+        "back squat",
+        "barbell squats",
+        "squats",
+        "bodyweight squat"
+      ],
+      "type": "squat",
+      "description": "A compound lower body exercise where you lower your hips from a standing position and then stand back up.",
+      "angleRules": [
+        {
+          "name": "knee_angle_bottom",
+          "joints": ["LEFT_HIP", "LEFT_KNEE", "LEFT_ANKLE"],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "SHALLOW_SQUAT",
+          "message": "Go deeper - aim for 90 degrees at the knee",
+          "severity": "warning"
+        },
+        {
+          "name": "back_angle",
+          "joints": ["LEFT_SHOULDER", "LEFT_HIP", "LEFT_KNEE"],
+          "minDegrees": 140,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep your back straight and chest up",
+          "severity": "critical"
+        },
+        {
+          "name": "hip_angle_bottom",
+          "joints": ["LEFT_KNEE", "LEFT_HIP", "LEFT_SHOULDER"],
+          "minDegrees": 60,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Lower hips until thighs are parallel to ground",
+          "severity": "warning"
+        },
+        {
+          "name": "ankle_angle",
+          "joints": ["LEFT_KNEE", "LEFT_ANKLE", "LEFT_FOOT_INDEX"],
+          "minDegrees": 60,
+          "maxDegrees": 110,
+          "phase": "bottom",
+          "violationType": "HEEL_LIFT",
+          "message": "Keep heels flat on the ground",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "knee_over_toes",
+          "points": ["LEFT_KNEE", "LEFT_ANKLE"],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.08,
+          "violationType": "KNEE_TOO_FORWARD",
+          "message": "Knees should stay aligned with toes",
+          "severity": "warning"
+        },
+        {
+          "name": "shoulder_hip_alignment",
+          "points": ["LEFT_SHOULDER", "LEFT_HIP"],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.05,
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain neutral spine position",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.15,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    },
+    {
+      "id": "deadlift",
+      "name": "Deadlift",
+      "aliases": [
+        "deadlift",
+        "conventional deadlift",
+        "barbell deadlift",
+        "deadlifts"
+      ],
+      "type": "deadlift",
+      "description": "A hip-hinge movement where you lift a weight from the ground to hip level.",
+      "angleRules": [
+        {
+          "name": "back_angle_start",
+          "joints": ["LEFT_SHOULDER", "LEFT_HIP", "LEFT_KNEE"],
+          "minDegrees": 150,
+          "maxDegrees": 180,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep your back straight throughout the lift",
+          "severity": "critical"
+        },
+        {
+          "name": "hip_angle_bottom",
+          "joints": ["LEFT_KNEE", "LEFT_HIP", "LEFT_SHOULDER"],
+          "minDegrees": 40,
+          "maxDegrees": 80,
+          "phase": "bottom",
+          "violationType": "IMPROPER_STARTING_POSITION",
+          "message": "Hips should be higher than knees at start",
+          "severity": "warning"
+        },
+        {
+          "name": "knee_angle_bottom",
+          "joints": ["LEFT_HIP", "LEFT_KNEE", "LEFT_ANKLE"],
+          "minDegrees": 110,
+          "maxDegrees": 160,
+          "phase": "bottom",
+          "violationType": "IMPROPER_STARTING_POSITION",
+          "message": "Knees should be slightly bent at start",
+          "severity": "info"
+        },
+        {
+          "name": "lockout_angle",
+          "joints": ["LEFT_KNEE", "LEFT_HIP", "LEFT_SHOULDER"],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "top",
+          "violationType": "LOCKOUT_ISSUE",
+          "message": "Fully extend hips at the top",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "bar_over_midfoot",
+          "points": ["LEFT_SHOULDER", "LEFT_ANKLE"],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.06,
+          "violationType": "IMPROPER_STARTING_POSITION",
+          "message": "Bar should be over midfoot at start",
+          "severity": "warning"
+        },
+        {
+          "name": "straight_back",
+          "points": ["LEFT_SHOULDER", "LEFT_HIP"],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.04,
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain neutral spine",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_HIP",
+        "axis": "y",
+        "threshold": 0.2,
+        "direction": "upThenDown",
+        "holdTimeMs": 300
+      }
+    },
+    {
+      "id": "bench_press",
+      "name": "Bench Press",
+      "aliases": [
+        "bench press",
+        "barbell bench press",
+        "bench",
+        "chest press"
+      ],
+      "type": "benchPress",
+      "description": "A pushing movement where you lower a barbell to your chest and press it back up.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": ["LEFT_SHOULDER", "LEFT_ELBOW", "LEFT_WRIST"],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Lower the bar to touch your chest",
+          "severity": "warning"
+        },
+        {
+          "name": "elbow_angle_top",
+          "joints": ["LEFT_SHOULDER", "LEFT_ELBOW", "LEFT_WRIST"],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "top",
+          "violationType": "LOCKOUT_ISSUE",
+          "message": "Fully extend arms at the top",
+          "severity": "info"
+        },
+        {
+          "name": "elbow_flare",
+          "joints": ["LEFT_SHOULDER", "LEFT_ELBOW", "LEFT_HIP"],
+          "minDegrees": 30,
+          "maxDegrees": 70,
+          "phase": "all",
+          "violationType": "ELBOW_FLARE",
+          "message": "Keep elbows at 45-degree angle, not fully flared",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "wrist_alignment",
+          "points": ["LEFT_WRIST", "LEFT_ELBOW"],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.05,
+          "violationType": "GRIP_WIDTH",
+          "message": "Wrists should be directly above elbows",
+          "severity": "info"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.12,
+        "direction": "downThenUp",
+        "holdTimeMs": 250
+      }
+    },
+    {
+      "id": "overhead_press",
+      "name": "Overhead Press",
+      "aliases": [
+        "overhead press",
+        "shoulder press",
+        "military press",
+        "ohp",
+        "barbell press"
+      ],
+      "type": "overheadPress",
+      "description": "A vertical pressing movement where you press a barbell from shoulder height to overhead.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": ["LEFT_SHOULDER", "LEFT_ELBOW", "LEFT_WRIST"],
+          "minDegrees": 80,
+          "maxDegrees": 110,
+          "phase": "bottom",
+          "violationType": "IMPROPER_STARTING_POSITION",
+          "message": "Start with elbows at 90 degrees",
+          "severity": "info"
+        },
+        {
+          "name": "elbow_angle_top",
+          "joints": ["LEFT_SHOULDER", "LEFT_ELBOW", "LEFT_WRIST"],
+          "minDegrees": 165,
+          "maxDegrees": 185,
+          "phase": "top",
+          "violationType": "LOCKOUT_ISSUE",
+          "message": "Fully lock out arms overhead",
+          "severity": "warning"
+        },
+        {
+          "name": "back_angle",
+          "joints": ["LEFT_HIP", "LEFT_SHOULDER", "LEFT_EAR"],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep torso vertical, don't lean back excessively",
+          "severity": "critical"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "bar_overhead_alignment",
+          "points": ["LEFT_WRIST", "LEFT_SHOULDER"],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.07,
+          "violationType": "IMPROPER_STARTING_POSITION",
+          "message": "Bar should be directly overhead at lockout",
+          "severity": "warning"
+        },
+        {
+          "name": "body_vertical",
+          "points": ["LEFT_ANKLE", "LEFT_HIP", "LEFT_SHOULDER"],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.06,
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain vertical torso position",
+          "severity": "warning"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_WRIST",
+        "axis": "y",
+        "threshold": 0.18,
+        "direction": "upThenDown",
+        "holdTimeMs": 300
+      }
+    },
+    {
+      "id": "pushup",
+      "name": "Push-up",
+      "aliases": [
+        "pushup",
+        "push-up",
+        "push up",
+        "pushups",
+        "press up"
+      ],
+      "type": "pushUp",
+      "description": "A bodyweight pushing exercise performed in a prone position.",
+      "angleRules": [
+        {
+          "name": "elbow_angle_bottom",
+          "joints": ["LEFT_SHOULDER", "LEFT_ELBOW", "LEFT_WRIST"],
+          "minDegrees": 70,
+          "maxDegrees": 100,
+          "phase": "bottom",
+          "violationType": "INSUFFICIENT_DEPTH",
+          "message": "Lower chest closer to the ground",
+          "severity": "warning"
+        },
+        {
+          "name": "elbow_angle_top",
+          "joints": ["LEFT_SHOULDER", "LEFT_ELBOW", "LEFT_WRIST"],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "top",
+          "violationType": "LOCKOUT_ISSUE",
+          "message": "Fully extend arms at the top",
+          "severity": "info"
+        },
+        {
+          "name": "body_plank",
+          "joints": ["LEFT_ANKLE", "LEFT_HIP", "LEFT_SHOULDER"],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Keep body in a straight line - engage core",
+          "severity": "critical"
+        },
+        {
+          "name": "hip_sag_check",
+          "joints": ["LEFT_KNEE", "LEFT_HIP", "LEFT_SHOULDER"],
+          "minDegrees": 160,
+          "maxDegrees": 185,
+          "phase": "all",
+          "violationType": "BACK_ROUNDING",
+          "message": "Don't let hips sag - engage glutes",
+          "severity": "warning"
+        }
+      ],
+      "alignmentRules": [
+        {
+          "name": "hands_shoulder_width",
+          "points": ["LEFT_WRIST", "LEFT_SHOULDER"],
+          "alignmentType": "vertical",
+          "maxDeviationNormalized": 0.08,
+          "violationType": "GRIP_WIDTH",
+          "message": "Hands should be slightly wider than shoulders",
+          "severity": "info"
+        },
+        {
+          "name": "straight_body",
+          "points": ["LEFT_ANKLE", "LEFT_HIP", "LEFT_SHOULDER"],
+          "alignmentType": "straight",
+          "maxDeviationNormalized": 0.05,
+          "violationType": "BACK_ROUNDING",
+          "message": "Maintain straight body position",
+          "severity": "critical"
+        }
+      ],
+      "repDetection": {
+        "keyJoint": "LEFT_SHOULDER",
+        "axis": "y",
+        "threshold": 0.1,
+        "direction": "downThenUp",
+        "holdTimeMs": 200
+      }
+    }
+  ],
+  "violations": {
+    "KNEE_CAVE": {
+      "description": "Knees caving inward (valgus collapse)",
+      "correction": "Push knees outward, engage glutes and external rotators",
+      "severity": "critical"
+    },
+    "BACK_ROUNDING": {
+      "description": "Rounded spine detected",
+      "correction": "Engage core, keep chest up, maintain neutral spine",
+      "severity": "critical"
+    },
+    "SHALLOW_SQUAT": {
+      "description": "Not squatting deep enough",
+      "correction": "Lower hips until thighs are at least parallel to ground",
+      "severity": "warning"
+    },
+    "KNEE_TOO_FORWARD": {
+      "description": "Knees extending too far past toes",
+      "correction": "Sit back more, engage hips earlier in the movement",
+      "severity": "warning"
+    },
+    "INSUFFICIENT_DEPTH": {
+      "description": "Not reaching proper depth for the exercise",
+      "correction": "Increase range of motion, work on mobility if needed",
+      "severity": "warning"
+    },
+    "IMPROPER_STARTING_POSITION": {
+      "description": "Starting position is not optimal",
+      "correction": "Reset your setup - check bar position, stance, and body alignment",
+      "severity": "warning"
+    },
+    "ELBOW_FLARE": {
+      "description": "Elbows flaring out too much",
+      "correction": "Keep elbows at 45-degree angle to protect shoulders",
+      "severity": "warning"
+    },
+    "HEEL_LIFT": {
+      "description": "Heels lifting off the ground",
+      "correction": "Keep weight on midfoot and heels, improve ankle mobility",
+      "severity": "warning"
+    },
+    "HEAD_POSITION": {
+      "description": "Neck hyperextension or excessive flexion",
+      "correction": "Keep neck in neutral position, aligned with spine",
+      "severity": "info"
+    },
+    "ASYMMETRIC_MOVEMENT": {
+      "description": "Uneven movement on left and right sides",
+      "correction": "Focus on symmetrical movement, reduce weight if needed",
+      "severity": "warning"
+    },
+    "TOO_FAST_ECCENTRIC": {
+      "description": "Lowering weight too quickly",
+      "correction": "Control the descent - aim for 2-3 second negative",
+      "severity": "info"
+    },
+    "TOO_FAST_CONCENTRIC": {
+      "description": "Lifting weight too quickly (momentum)",
+      "correction": "Use controlled speed, focus on muscle contraction",
+      "severity": "info"
+    },
+    "LOCKOUT_ISSUE": {
+      "description": "Not fully extending at the top",
+      "correction": "Complete the range of motion with full lockout",
+      "severity": "warning"
+    },
+    "GRIP_WIDTH": {
+      "description": "Hand placement may not be optimal",
+      "correction": "Adjust grip width for better biomechanics",
+      "severity": "info"
+    },
+    "UNBALANCED_BAR": {
+      "description": "Bar tilting to one side",
+      "correction": "Focus on even pressure with both hands/feet",
+      "severity": "warning"
+    }
+  }
+}
