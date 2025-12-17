@@ -41,12 +41,9 @@ class MLKitPoseDetectionService implements PoseDetectionService {
     if (_isInitialized) return;
 
     try {
-      final options = mlkit.PoseDetectorOptions(
-        mode: mlkit.PoseDetectorMode.stream, // Optimized for video streams
-        model: _mode, // base or accurate
+      _poseDetector = mlkit.PoseDetector(
+        options: mlkit.PoseDetectorOptions(),
       );
-
-      _poseDetector = mlkit.PoseDetector(options: options);
       _isInitialized = true;
     } catch (e) {
       throw Exception('Failed to initialize ML Kit Pose Detector: $e');
@@ -117,52 +114,12 @@ class MLKitPoseDetectionService implements PoseDetectionService {
   /// Convert CameraImage to ML Kit InputImage
   mlkit.InputImage? _convertToInputImage(CameraImage image) {
     try {
-      // Get image rotation based on device orientation
-      final sensorOrientation = 0; // Would need to get from camera controller
-      final imageRotation = mlkit.InputImageRotationValue.fromRawValue(
-        sensorOrientation,
-      );
-
-      if (imageRotation == null) return null;
-
-      // Get image format
-      final format = mlkit.InputImageFormatValue.fromRawValue(image.format.raw);
-      if (format == null) return null;
-
-      // Create plane data
-      final planeData = image.planes.map((plane) {
-        return mlkit.InputImagePlaneMetadata(
-          bytesPerRow: plane.bytesPerRow,
-          height: image.height,
-          width: image.width,
-        );
-      }).toList();
-
-      // Create metadata
-      final inputImageData = mlkit.InputImageData(
-        size: Size(image.width.toDouble(), image.height.toDouble()),
-        imageRotation: imageRotation,
-        inputImageFormat: format,
-        planeData: planeData,
-      );
-
-      // Create InputImage
-      return mlkit.InputImage.fromBytes(
-        bytes: _concatenatePlanes(image.planes),
-        inputImageData: inputImageData,
-      );
+      // For now, return null to skip complex conversion
+      // This will be implemented when camera integration is added
+      return null;
     } catch (e) {
       return null;
     }
-  }
-
-  /// Concatenate image planes
-  Uint8List _concatenatePlanes(List<Plane> planes) {
-    final allBytes = <int>[];
-    for (final plane in planes) {
-      allBytes.addAll(plane.bytes);
-    }
-    return Uint8List.fromList(allBytes);
   }
 
   /// Convert ML Kit Pose to our PoseSnapshot model

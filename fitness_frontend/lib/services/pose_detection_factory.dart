@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'pose_detection_service.dart';
-import 'tensorflow_lite_pose_service.dart';
+// import 'tensorflow_lite_pose_service.dart';  // Disabled: tflite_flutter has FFI issues
 
 /// Factory for creating platform-specific pose detection services
 class PoseDetectionFactory {
@@ -12,18 +12,12 @@ class PoseDetectionFactory {
   }) {
     // Check if running on web
     if (kIsWeb) {
-      return TensorFlowLitePoseService(
-        modelPath: 'assets/models/movenet_lightning.tflite',
-        frameSkipCount: frameSkipCount,
-      );
+      throw UnsupportedError('TensorFlow Lite not available. Web support requires tflite_flutter package.');
     }
 
     // Check if running on desktop platforms
     if (_isDesktop()) {
-      return TensorFlowLitePoseService(
-        modelPath: 'assets/models/movenet_lightning.tflite',
-        frameSkipCount: frameSkipCount,
-      );
+      throw UnsupportedError('TensorFlow Lite not available. Desktop support requires tflite_flutter package.');
     }
 
     // Default to ML Kit for mobile platforms (iOS/Android)
@@ -113,11 +107,7 @@ class PoseDetectionFactory {
   /// Note: This may be slower but more accurate
   static PoseDetectionService createHighAccuracyService() {
     if (kIsWeb || _isDesktop()) {
-      // For web/desktop, we only have one model option
-      return TensorFlowLitePoseService(
-        modelPath: 'assets/models/movenet_thunder.tflite', // More accurate model
-        frameSkipCount: 3, // Skip more frames due to slower processing
-      );
+      throw UnsupportedError('TensorFlow Lite not available. Web/Desktop support requires tflite_flutter package.');
     }
 
     // Mobile: use accurate mode
@@ -131,10 +121,7 @@ class PoseDetectionFactory {
   /// Note: This prioritizes speed over accuracy
   static PoseDetectionService createPerformanceOptimizedService() {
     if (kIsWeb || _isDesktop()) {
-      return TensorFlowLitePoseService(
-        modelPath: 'assets/models/movenet_lightning.tflite', // Faster model
-        frameSkipCount: 4, // Skip more frames for better performance
-      );
+      throw UnsupportedError('TensorFlow Lite not available. Web/Desktop support requires tflite_flutter package.');
     }
 
     // Mobile: use base mode with more frame skipping

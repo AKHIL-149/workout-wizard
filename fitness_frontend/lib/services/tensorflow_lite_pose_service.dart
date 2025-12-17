@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
 import '../models/pose_data.dart';
+import 'pose_detection_service.dart';
 
 /// TensorFlow Lite-based pose detection service for web/desktop
 /// Uses MoveNet model for cross-platform pose detection

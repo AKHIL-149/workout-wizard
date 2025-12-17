@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/exercise_form_rules.dart';
+import '../models/form_analysis.dart';
 import '../models/pose_data.dart';
 import '../utils/exercise_name_mapper.dart';
 
