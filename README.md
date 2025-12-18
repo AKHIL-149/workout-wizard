@@ -10,12 +10,25 @@ The system includes enhanced goal matching with semantic understanding, LRU cach
 
 ## Features
 
+### Backend Recommendation Engine
 - **Content-Based Filtering**: Matches users with programs using cosine similarity on encoded features
 - **Enhanced Goal Matching**: Uses both rule-based relationships and semantic similarity to understand fitness goals
 - **Performance Optimization**: LRU caching provides sub-millisecond response times for repeated queries
 - **Recommendation Diversity**: Prevents recommending too many similar programs
 - **Adaptive Learning**: User feedback system improves recommendations over time
 - **Multiple Interfaces**: REST API, Python API, and CLI for different use cases
+
+### Mobile App (Flutter)
+- **AI-Powered Recommendations**: Personalized workout program suggestions
+- **Exercise Form Correction**: Real-time pose detection with ML Kit (iOS/Android)
+  - 30+ exercises supported
+  - Live form feedback with visual & audio cues
+  - Automatic rep counting
+  - Form scoring and analysis
+  - Post-workout summaries
+  - Export/share capabilities
+- **Workout Tracking**: Complete workout logging and history
+- **Cross-Platform**: iOS, Android, Web support
 
 ## Dataset
 
@@ -26,12 +39,20 @@ The system works with:
 
 ## Technologies
 
+### Backend
 - Python 3.12
 - scikit-learn for machine learning
 - FastAPI for REST API
 - Pydantic for data validation
 - pandas and NumPy for data processing
 - joblib for model serialization
+
+### Mobile App
+- Flutter 3.x for cross-platform development
+- Google ML Kit for pose detection (iOS/Android)
+- Hive for local data storage
+- Provider for state management
+- fl_chart for analytics visualization
 
 ## Installation
 

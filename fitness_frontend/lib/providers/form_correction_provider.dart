@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/pose_data.dart';
 import '../models/form_analysis.dart';
-import '../models/exercise_form_rules.dart';
 import '../services/form_analysis_service.dart';
 import '../services/form_correction_storage_service.dart';
 import '../services/analytics_service.dart';

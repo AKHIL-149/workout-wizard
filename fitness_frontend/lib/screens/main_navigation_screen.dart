@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'recommendation_form_screen.dart';
 import 'analytics_dashboard_screen.dart';
-import '../services/session_service.dart';
 import '../services/gamification_service.dart';
 
 class MainNavigationScreen extends StatefulWidget {

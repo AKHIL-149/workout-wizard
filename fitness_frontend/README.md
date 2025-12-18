@@ -86,6 +86,13 @@ flutter build web --release
 
 ## 🎨 Features
 
+### Core Features
+- ✅ **AI-Powered Program Recommendations** - Personalized workout plans
+- ✅ **Exercise Form Correction** - Real-time pose detection and feedback (iOS/Android)
+- ✅ **Workout Tracking** - Track sets, reps, and progress
+- ✅ **Session History** - Review past workouts and improvements
+
+### UI/UX
 - ✅ Material Design 3 UI
 - ✅ Responsive layout (mobile, tablet, desktop)
 - ✅ Dark mode ready
@@ -94,6 +101,16 @@ flutter build web --release
 - ✅ Form validation
 - ✅ Error handling
 - ✅ Loading states
+
+### Form Correction Module (iOS/Android)
+- ✅ Real-time pose detection using ML Kit
+- ✅ Support for 30+ exercises (squats, deadlifts, push-ups, etc.)
+- ✅ Live form feedback with visual & audio cues
+- ✅ Automatic rep counting
+- ✅ Form scoring (A+ to F grades)
+- ✅ Post-workout analysis
+- ✅ Export & share workout data (JSON, CSV, PDF, text)
+- ✅ Customizable settings
 
 ## 🛠️ Development
 
@@ -117,20 +134,34 @@ flutter test
 
 ## 📦 Dependencies
 
+### Core
 - `http` - API calls
 - `google_fonts` - Typography
 - `provider` - State management
 - `flutter_bloc` - Advanced state management
 - `shared_preferences` - Local storage
 - `intl` - Internationalization
+- `hive` & `hive_flutter` - Fast local database
+
+### Form Correction
+- `google_mlkit_pose_detection` - Pose detection (iOS/Android)
+- `camera` - Camera access
+- `flutter_tts` - Text-to-speech for audio feedback
+- `fl_chart` - Progress charts and analytics
+- `share_plus` - Share workout data
+- `path_provider` - File system access
 
 ## 🔒 Permissions
 
 ### Android
 - ✅ Internet access (already configured)
+- ✅ Camera access (for form correction)
+- ✅ Storage access (for saving workout data)
 
 ### iOS
 - ✅ HTTP transport security (already configured)
+- ✅ Camera usage (for form correction)
+- ✅ Photo library access (for progress photos)
 
 ## 📱 Screenshots
 
