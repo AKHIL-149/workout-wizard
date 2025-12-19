@@ -8,7 +8,6 @@ class PoseDetectionFactory {
   /// Create the appropriate pose detection service based on the current platform
   static PoseDetectionService createPoseDetectionService({
     int frameSkipCount = 2,
-    PoseDetectionMode mode = PoseDetectionMode.base,
   }) {
     // Check if running on web
     if (kIsWeb) {
@@ -22,7 +21,6 @@ class PoseDetectionFactory {
 
     // Default to ML Kit for mobile platforms (iOS/Android)
     return MLKitPoseDetectionService(
-      mode: mode,
       frameSkipCount: frameSkipCount,
     );
   }
@@ -110,10 +108,9 @@ class PoseDetectionFactory {
       throw UnsupportedError('TensorFlow Lite not available. Web/Desktop support requires tflite_flutter package.');
     }
 
-    // Mobile: use accurate mode
+    // Mobile: use fewer frame skips for higher accuracy
     return MLKitPoseDetectionService(
-      mode: PoseDetectionMode.accurate,
-      frameSkipCount: 3,
+      frameSkipCount: 1,
     );
   }
 
@@ -124,9 +121,8 @@ class PoseDetectionFactory {
       throw UnsupportedError('TensorFlow Lite not available. Web/Desktop support requires tflite_flutter package.');
     }
 
-    // Mobile: use base mode with more frame skipping
+    // Mobile: use more frame skipping for better performance
     return MLKitPoseDetectionService(
-      mode: PoseDetectionMode.base,
       frameSkipCount: 4,
     );
   }

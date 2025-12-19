@@ -816,37 +816,6 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen>
     );
   }
 
-  Widget _buildBenefitItem(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 4),
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: Colors.green.shade100,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.check,
-              size: 14,
-              color: Colors.green.shade700,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(fontSize: 14, height: 1.5),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildAudienceCard() {
     return Container(
       padding: const EdgeInsets.all(16),

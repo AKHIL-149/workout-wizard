@@ -275,8 +275,6 @@ enum PerformanceProfile {
 
 /// Performance monitoring and recommendations
 class PerformanceMonitor {
-  static const Duration _monitoringInterval = Duration(seconds: 5);
-
   final List<double> _fpsHistory = [];
   final List<int> _processingTimeHistory = [];
   DateTime? _lastFrameTime;

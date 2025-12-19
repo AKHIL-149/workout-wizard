@@ -73,7 +73,6 @@ class VideoRecordingService {
 
       // Move the video to our custom path
       if (_currentVideoPath != null) {
-        final destinationFile = File(_currentVideoPath!);
         await File(videoFile.path).copy(_currentVideoPath!);
         await File(videoFile.path).delete();
 

@@ -298,25 +298,6 @@ class TensorFlowLitePoseService implements PoseDetectionService {
     // MoveNet has 17 keypoints, but ML Kit has 33
     // We need to add missing landmarks with low confidence
 
-    final missingLandmarks = [
-      'LEFT_EYE_INNER',
-      'LEFT_EYE_OUTER',
-      'RIGHT_EYE_INNER',
-      'RIGHT_EYE_OUTER',
-      'LEFT_MOUTH',
-      'RIGHT_MOUTH',
-      'LEFT_PINKY',
-      'RIGHT_PINKY',
-      'LEFT_INDEX',
-      'RIGHT_INDEX',
-      'LEFT_THUMB',
-      'RIGHT_THUMB',
-      'LEFT_HEEL',
-      'RIGHT_HEEL',
-      'LEFT_FOOT_INDEX',
-      'RIGHT_FOOT_INDEX',
-    ];
-
     // Try to estimate missing landmarks based on existing ones
     final leftEye = landmarks.firstWhere(
       (l) => l.name == 'LEFT_EYE',

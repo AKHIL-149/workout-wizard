@@ -86,7 +86,6 @@ class ExerciseNameMapper {
 
     ExerciseFormRules? bestMatch;
     double bestScore = 0.0;
-    bool isExact = false;
 
     for (final rules in allRules) {
       // Check exact match with name

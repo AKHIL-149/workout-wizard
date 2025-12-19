@@ -3,7 +3,6 @@ import '../models/user_profile.dart';
 import '../services/session_service.dart';
 import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
-import '../services/storage_service.dart';
 import 'main_navigation_screen.dart';
 
 /// Multi-step onboarding wizard for new users
@@ -23,13 +22,10 @@ class _OnboardingWizardScreenState extends State<OnboardingWizardScreen> {
   String? _fitnessLevel;
   final List<String> _selectedGoals = [];
   String? _equipment;
-  String? _experienceDescription;
   String? _timeCommitment;
 
-  final SessionService _sessionService = SessionService();
   final AnalyticsService _analyticsService = AnalyticsService();
   final GamificationService _gamificationService = GamificationService();
-  final StorageService _storageService = StorageService();
 
   @override
   void dispose() {

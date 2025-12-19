@@ -282,24 +282,6 @@ class OnDeviceRecommender {
     return 0.3;
   }
 
-  /// Parse user count string to number
-  int _parseUserCount(String userCount) {
-    try {
-      final cleaned = userCount.toLowerCase().replaceAll(RegExp(r'[^0-9.]'), '');
-      final num = double.parse(cleaned);
-
-      if (userCount.contains('k')) {
-        return (num * 1000).toInt();
-      } else if (userCount.contains('m')) {
-        return (num * 1000000).toInt();
-      }
-
-      return num.toInt();
-    } catch (e) {
-      return 0;
-    }
-  }
-
   // Getters
   bool get isInitialized => _isInitialized;
   int get programCount => _programDatabase.length;

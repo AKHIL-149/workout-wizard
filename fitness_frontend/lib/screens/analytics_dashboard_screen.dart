@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
-import '../services/session_service.dart';
 import '../services/context_service.dart';
 
 /// Analytics dashboard screen showing user insights and progress
@@ -16,7 +15,6 @@ class AnalyticsDashboardScreen extends StatefulWidget {
 class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
   final AnalyticsService _analyticsService = AnalyticsService();
   final GamificationService _gamificationService = GamificationService();
-  final SessionService _sessionService = SessionService();
   final ContextService _contextService = ContextService();
 
   @override

@@ -57,7 +57,6 @@ class _FormCorrectionScreenState extends State<FormCorrectionScreen>
     WidgetsBinding.instance.addObserver(this);
     _poseDetectionService = PoseDetectionFactory.createPoseDetectionService(
       frameSkipCount: 2,
-      mode: PoseDetectionMode.base,
     );
     _initialize();
   }

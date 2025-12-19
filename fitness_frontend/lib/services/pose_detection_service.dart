@@ -23,14 +23,9 @@ class MLKitPoseDetectionService implements PoseDetectionService {
   int _frameSkipCount = 2;
   int _currentFrame = 0;
 
-  // Performance mode: base (faster) or accurate (more precise)
-  final PoseDetectionMode _mode;
-
   MLKitPoseDetectionService({
-    PoseDetectionMode mode = PoseDetectionMode.base,
     int frameSkipCount = 2,
-  })  : _mode = mode,
-        _frameSkipCount = frameSkipCount;
+  })  : _frameSkipCount = frameSkipCount;
 
   @override
   Stream<models.PoseSnapshot> get poseStream => _poseController.stream;
