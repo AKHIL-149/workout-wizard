@@ -61,12 +61,18 @@ class _RepCounterWidgetState extends State<RepCounterWidget>
         ? (widget.repCount / widget.targetReps!).clamp(0.0, 1.0)
         : 0.0;
 
-    return AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: Container(
+    final semanticsLabel = widget.targetReps != null
+        ? '${widget.repCount} reps of ${widget.targetReps}'
+        : '${widget.repCount} reps';
+
+    return Semantics(
+      label: semanticsLabel,
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -152,6 +158,7 @@ class _RepCounterWidgetState extends State<RepCounterWidget>
           ),
         );
       },
+      ),
     );
   }
 }

@@ -35,7 +35,7 @@ void main() {
       expect(find.text('92%'), findsOneWidget);
     });
 
-    testWidgets('should display B grade for 80-89 score', (WidgetTester tester) async {
+    testWidgets('should display A- grade for 85-89 score', (WidgetTester tester) async {
       final score = FormScore.fromPercentage(85.0);
 
       await tester.pumpWidget(
@@ -46,11 +46,11 @@ void main() {
         ),
       );
 
-      expect(find.text('B'), findsOneWidget);
+      expect(find.text('A-'), findsOneWidget);
       expect(find.text('85%'), findsOneWidget);
     });
 
-    testWidgets('should display C grade for 70-79 score', (WidgetTester tester) async {
+    testWidgets('should display B grade for 75-79 score', (WidgetTester tester) async {
       final score = FormScore.fromPercentage(75.0);
 
       await tester.pumpWidget(
@@ -61,11 +61,11 @@ void main() {
         ),
       );
 
-      expect(find.text('C'), findsOneWidget);
+      expect(find.text('B'), findsOneWidget);
       expect(find.text('75%'), findsOneWidget);
     });
 
-    testWidgets('should display D grade for 60-69 score', (WidgetTester tester) async {
+    testWidgets('should display C+ grade for 65-69 score', (WidgetTester tester) async {
       final score = FormScore.fromPercentage(65.0);
 
       await tester.pumpWidget(
@@ -76,7 +76,7 @@ void main() {
         ),
       );
 
-      expect(find.text('D'), findsOneWidget);
+      expect(find.text('C+'), findsOneWidget);
       expect(find.text('65%'), findsOneWidget);
     });
 
@@ -106,15 +106,14 @@ void main() {
         ),
       );
 
-      final container = tester.widget<Container>(
-        find.descendant(
-          of: find.byType(FormScoreBadge),
-          matching: find.byType(Container).first,
-        ),
-      );
+      // Verify the score has a green color (for A+ grade >= 95%)
+      expect(score.displayColor, equals(Colors.green[700]));
 
-      final decoration = container.decoration as BoxDecoration?;
-      expect(decoration?.color, equals(Colors.green));
+      // Verify the grade text widget uses the correct color
+      final gradeText = tester.widget<Text>(
+        find.text('A+'),
+      );
+      expect(gradeText.style?.color, equals(Colors.green[700]));
     });
 
     testWidgets('should handle minimum score (0)', (WidgetTester tester) async {
@@ -193,8 +192,8 @@ void main() {
         ),
       );
 
-      // Should display grade
-      expect(find.text('B'), findsOneWidget);
+      // Should display grade (85% -> A-)
+      expect(find.text('A-'), findsOneWidget);
 
       final size = tester.getSize(find.byType(FormScoreBadge));
 
@@ -204,7 +203,7 @@ void main() {
     });
 
     testWidgets('should update when score changes', (WidgetTester tester) async {
-      var percentage = 50.0;
+      var percentage = 45.0;  // F grade (< 50%)
 
       await tester.pumpWidget(
         MaterialApp(

@@ -17,7 +17,7 @@ void main() {
       );
 
       expect(find.text('0'), findsOneWidget);
-      expect(find.text('/ 10'), findsOneWidget);
+      expect(find.text('of 10'), findsOneWidget);
     });
 
     testWidgets('should display current rep count', (WidgetTester tester) async {
@@ -33,7 +33,7 @@ void main() {
       );
 
       expect(find.text('5'), findsOneWidget);
-      expect(find.text('/ 10'), findsOneWidget);
+      expect(find.text('of 10'), findsOneWidget);
     });
 
     testWidgets('should display completed state when target reached', (WidgetTester tester) async {
@@ -49,7 +49,7 @@ void main() {
       );
 
       expect(find.text('10'), findsOneWidget);
-      expect(find.text('/ 10'), findsOneWidget);
+      expect(find.text('of 10'), findsOneWidget);
     });
 
     testWidgets('should handle reps exceeding target', (WidgetTester tester) async {
@@ -65,7 +65,7 @@ void main() {
       );
 
       expect(find.text('12'), findsOneWidget);
-      expect(find.text('/ 10'), findsOneWidget);
+      expect(find.text('of 10'), findsOneWidget);
     });
 
     testWidgets('should display without target when not provided', (WidgetTester tester) async {

@@ -73,15 +73,19 @@ class _FormScoreBadgeState extends State<FormScoreBadge>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _progressAnimation,
-      builder: (context, child) {
-        return SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
+    final semanticsLabel = 'Form score: ${widget.score.grade}, ${widget.score.percentage.toStringAsFixed(0)} percent';
+
+    return Semantics(
+      label: semanticsLabel,
+      child: AnimatedBuilder(
+        animation: _progressAnimation,
+        builder: (context, child) {
+          return SizedBox(
+            width: widget.size,
+            height: widget.size,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
               // Background circle
               CustomPaint(
                 size: Size(widget.size, widget.size),
@@ -126,6 +130,7 @@ class _FormScoreBadgeState extends State<FormScoreBadge>
           ),
         );
       },
+      ),
     );
   }
 }
