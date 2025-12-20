@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
+// import 'package:tflite_flutter/tflite_flutter.dart';  // Disabled: FFI compatibility issues
 import 'package:image/image.dart' as img;
 import '../models/pose_data.dart';
 import 'pose_detection_service.dart';
 
 /// TensorFlow Lite-based pose detection service for web/desktop
 /// Uses MoveNet model for cross-platform pose detection
+/// NOTE: Currently disabled due to tflite_flutter FFI compatibility issues
+/// This class is kept for future re-enabling when FFI issues are resolved
 class TensorFlowLitePoseService implements PoseDetectionService {
   final _poseController = StreamController<PoseSnapshot>.broadcast();
-  Interpreter? _interpreter;
+  dynamic _interpreter;  // Would be Interpreter? when tflite_flutter is enabled
   bool _isProcessing = false;
   bool _isInitialized = false;
 
@@ -60,17 +62,24 @@ class TensorFlowLitePoseService implements PoseDetectionService {
   Future<void> initialize() async {
     if (_isInitialized) return;
 
-    try {
-      // Load TFLite model
-      _interpreter = await Interpreter.fromAsset(_modelPath);
+    // Disabled: tflite_flutter package not available
+    throw UnsupportedError(
+      'TensorFlow Lite is currently disabled due to FFI compatibility issues. '
+      'Web/Desktop pose detection support will be re-enabled when tflite_flutter is available.',
+    );
 
-      // Allocate tensors
-      _interpreter!.allocateTensors();
-
-      _isInitialized = true;
-    } catch (e) {
-      throw Exception('Failed to initialize TensorFlow Lite Pose Detector: $e');
-    }
+    // Original code (commented out):
+    // try {
+    //   // Load TFLite model
+    //   _interpreter = await Interpreter.fromAsset(_modelPath);
+    //
+    //   // Allocate tensors
+    //   _interpreter!.allocateTensors();
+    //
+    //   _isInitialized = true;
+    // } catch (e) {
+    //   throw Exception('Failed to initialize TensorFlow Lite Pose Detector: $e');
+    // }
   }
 
   @override
