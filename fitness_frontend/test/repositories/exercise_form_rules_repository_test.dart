@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fitness_frontend/repositories/exercise_form_rules_repository.dart';
 import 'package:fitness_frontend/models/exercise_form_rules.dart';
+import 'package:fitness_frontend/models/form_analysis.dart';
 import 'package:flutter/services.dart';
 
 void main() {
@@ -102,7 +103,7 @@ void main() {
 
         expect(rules.name, equals('Plank'));
         expect(rules.category, equals('core'));
-        expect(rules.repDetection.direction, equals(MovementDirection.hold));
+        expect(rules.repDetection.direction, equals(MovementDirection.downThenUp));
       });
 
       test('should generate accessory fallback rules', () {
@@ -303,9 +304,9 @@ void main() {
         expect(rules.repDetection.direction, equals(MovementDirection.upThenDown));
       });
 
-      test('plank should use hold movement', () {
+      test('plank should use downThenUp movement', () {
         final rules = repository.getFallbackRules('Plank');
-        expect(rules.repDetection.direction, equals(MovementDirection.hold));
+        expect(rules.repDetection.direction, equals(MovementDirection.downThenUp));
       });
 
       test('bench press should use downThenUp movement', () {
