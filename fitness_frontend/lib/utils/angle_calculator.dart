@@ -31,7 +31,7 @@ class AngleCalculator {
     final magnitude2 = vector2.length;
 
     if (magnitude1 == 0 || magnitude2 == 0) {
-      return 0.0;
+      return double.nan;
     }
 
     // cos(θ) = (a · b) / (|a| * |b|)
@@ -72,7 +72,7 @@ class AngleCalculator {
     final magnitude2 = vector2.length;
 
     if (magnitude1 == 0 || magnitude2 == 0) {
-      return 0.0;
+      return double.nan;
     }
 
     final cosAngle = dotProduct / (magnitude1 * magnitude2);
@@ -250,7 +250,7 @@ class AngleCalculator {
     final leftAvg = leftCount > 0 ? leftConfidence / leftCount : 0.0;
     final rightAvg = rightCount > 0 ? rightConfidence / rightCount : 0.0;
 
-    return leftAvg > rightAvg ? 'LEFT' : 'RIGHT';
+    return leftAvg >= rightAvg ? 'LEFT' : 'RIGHT';
   }
 
   /// Check if body is facing camera (both sides visible)
@@ -316,7 +316,17 @@ class AngleCalculator {
     final kneeDisplacement = (knee.x - hipAnkleMidX).abs();
 
     // Threshold: 0.05 normalized distance
-    return kneeDisplacement > 0.05 && knee.x < hipAnkleMidX;
+    // For LEFT leg: inward = knee moves right (higher x)
+    // For RIGHT leg: inward = knee moves left (lower x)
+    if (kneeDisplacement >= 0.05) {
+      if (side == 'LEFT') {
+        return knee.x > hipAnkleMidX;
+      } else {
+        return knee.x < hipAnkleMidX;
+      }
+    }
+
+    return false;
   }
 
   /// Calculate depth ratio for squats/lunges

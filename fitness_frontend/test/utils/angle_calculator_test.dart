@@ -30,9 +30,10 @@ void main() {
 
       test('should calculate 45 degree angle correctly', () {
         // Create points forming a 45 degree angle
-        final point1 = PoseLandmark(name: 'A', x: 0.0, y: 0.0, z: 0.0, confidence: 1.0);
-        final vertex = PoseLandmark(name: 'B', x: 1.0, y: 0.0, z: 0.0, confidence: 1.0);
-        final point2 = PoseLandmark(name: 'C', x: 2.0, y: 1.0, z: 0.0, confidence: 1.0);
+        // Vertex at origin, one point on x-axis, one at 45 degrees
+        final point1 = PoseLandmark(name: 'A', x: 1.0, y: 0.0, z: 0.0, confidence: 1.0);
+        final vertex = PoseLandmark(name: 'B', x: 0.0, y: 0.0, z: 0.0, confidence: 1.0);
+        final point2 = PoseLandmark(name: 'C', x: 1.0, y: 1.0, z: 0.0, confidence: 1.0);
 
         final angle = AngleCalculator.calculateAngle(point1, vertex, point2);
 
@@ -81,7 +82,7 @@ void main() {
         final point1 = PoseLandmark(name: 'A', x: 0.0, y: 0.0, z: 0.0, confidence: 1.0);
         final point2 = PoseLandmark(name: 'B', x: 1.0, y: 1.0, z: 1.0, confidence: 1.0);
 
-        final distance = AngleCalculator.calculateDistance(point1, point2);
+        final distance = AngleCalculator.calculateDistance3D(point1, point2);
 
         expect(distance, closeTo(math.sqrt(3), 0.001));
       });
@@ -155,7 +156,7 @@ void main() {
       test('should detect knee valgus (caving)', () {
         final landmarks = [
           PoseLandmark(name: 'LEFT_HIP', x: 0.4, y: 0.5, z: 0.0, confidence: 0.9),
-          PoseLandmark(name: 'LEFT_KNEE', x: 0.45, y: 0.7, z: 0.0, confidence: 0.9), // Knee moved inward
+          PoseLandmark(name: 'LEFT_KNEE', x: 0.46, y: 0.7, z: 0.0, confidence: 0.9), // Knee moved inward
           PoseLandmark(name: 'LEFT_ANKLE', x: 0.4, y: 0.9, z: 0.0, confidence: 0.9),
         ];
 
