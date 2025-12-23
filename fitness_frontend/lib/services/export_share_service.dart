@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -28,7 +29,7 @@ class ExportShareService {
 
       return filePath;
     } catch (e) {
-      print('Error exporting to JSON: $e');
+      debugPrint('ExportShareService: Error exporting to JSON: $e');
       return null;
     }
   }
@@ -83,7 +84,7 @@ class ExportShareService {
 
       return filePath;
     } catch (e) {
-      print('Error exporting to CSV: $e');
+      debugPrint('ExportShareService: Error exporting to CSV: $e');
       return null;
     }
   }
@@ -110,7 +111,7 @@ class ExportShareService {
 
       return filePath;
     } catch (e) {
-      print('Error exporting to text: $e');
+      debugPrint('ExportShareService: Error exporting to text: $e');
       return null;
     }
   }
@@ -239,7 +240,7 @@ class ExportShareService {
 
       return filePath;
     } catch (e) {
-      print('Error exporting multiple sessions: $e');
+      debugPrint('ExportShareService: Error exporting multiple sessions: $e');
       return null;
     }
   }
@@ -295,7 +296,7 @@ class ExportShareService {
 
       return files;
     } catch (e) {
-      print('Error getting exported files: $e');
+      debugPrint('ExportShareService: Error getting exported files: $e');
       return [];
     }
   }
@@ -310,7 +311,7 @@ class ExportShareService {
       }
       return false;
     } catch (e) {
-      print('Error deleting exported file: $e');
+      debugPrint('ExportShareService: Error deleting exported file: $e');
       return false;
     }
   }
@@ -325,7 +326,7 @@ class ExportShareService {
         await exportDirectory.delete(recursive: true);
       }
     } catch (e) {
-      print('Error deleting all exports: $e');
+      debugPrint('ExportShareService: Error deleting all exports: $e');
     }
   }
 

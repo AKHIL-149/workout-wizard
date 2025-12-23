@@ -18,7 +18,8 @@ class PoseSkeletonPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (pose == null || pose!.landmarks.isEmpty) return;
+    final currentPose = pose;
+    if (currentPose == null || currentPose.landmarks.isEmpty) return;
 
     // Calculate scale to fit image to canvas
     final scaleX = size.width / imageSize.width;
@@ -30,12 +31,12 @@ class PoseSkeletonPainter extends CustomPainter {
     final offsetY = (size.height - imageSize.height * scale) / 2;
 
     // Draw connections (bones) first, then landmarks (joints)
-    _drawConnections(canvas, scale, offsetX, offsetY);
-    _drawLandmarks(canvas, scale, offsetX, offsetY);
+    _drawConnections(canvas, currentPose, scale, offsetX, offsetY);
+    _drawLandmarks(canvas, currentPose, scale, offsetX, offsetY);
   }
 
   /// Draw connections between landmarks (bones)
-  void _drawConnections(Canvas canvas, double scale, double offsetX, double offsetY) {
+  void _drawConnections(Canvas canvas, PoseSnapshot pose, double scale, double offsetX, double offsetY) {
     final paint = Paint()
       ..strokeWidth = 3.0
       ..style = PaintingStyle.stroke;
@@ -44,8 +45,8 @@ class PoseSkeletonPainter extends CustomPainter {
     final connections = _getSkeletonConnections();
 
     for (final connection in connections) {
-      final start = pose!.getLandmark(connection.start);
-      final end = pose!.getLandmark(connection.end);
+      final start = pose.getLandmark(connection.start);
+      final end = pose.getLandmark(connection.end);
 
       if (start != null && end != null &&
           start.confidence > 0.5 && end.confidence > 0.5) {
@@ -69,8 +70,8 @@ class PoseSkeletonPainter extends CustomPainter {
   }
 
   /// Draw landmarks (joints)
-  void _drawLandmarks(Canvas canvas, double scale, double offsetX, double offsetY) {
-    for (final landmark in pose!.landmarks) {
+  void _drawLandmarks(Canvas canvas, PoseSnapshot pose, double scale, double offsetX, double offsetY) {
+    for (final landmark in pose.landmarks) {
       if (landmark.confidence < 0.5) continue;
 
       final position = Offset(
@@ -133,21 +134,22 @@ class PoseSkeletonPainter extends CustomPainter {
 
   /// Get landmark color based on form feedback
   Color _getLandmarkColor(String landmarkName) {
-    if (feedback == null) {
+    final currentFeedback = feedback;
+    if (currentFeedback == null) {
       return Colors.green;
     }
 
     // Check if this landmark is affected by any violation
-    for (final violation in feedback!.violations) {
+    for (final violation in currentFeedback.violations) {
       if (violation.affectedJoint == landmarkName) {
         return violation.severityColor;
       }
     }
 
     // Use overall form score for color
-    if (feedback!.score.percentage >= 85) {
+    if (currentFeedback.score.percentage >= 85) {
       return Colors.green;
-    } else if (feedback!.score.percentage >= 70) {
+    } else if (currentFeedback.score.percentage >= 70) {
       return Colors.yellow;
     } else {
       return Colors.orange;
@@ -156,19 +158,20 @@ class PoseSkeletonPainter extends CustomPainter {
 
   /// Get connection color based on form feedback
   Color _getConnectionColor(String start, String end) {
-    if (feedback == null) {
+    final currentFeedback = feedback;
+    if (currentFeedback == null) {
       return Colors.green.withOpacity(0.7);
     }
 
     // Check if either endpoint is affected by a violation
-    final affectedJoints = feedback!.violations
+    final affectedJoints = currentFeedback.violations
         .map((v) => v.affectedJoint)
         .whereType<String>()
         .toList();
 
     if (affectedJoints.contains(start) || affectedJoints.contains(end)) {
       // Find the most severe violation affecting these joints
-      final violations = feedback!.violations.where(
+      final violations = currentFeedback.violations.where(
         (v) => v.affectedJoint == start || v.affectedJoint == end,
       );
 
@@ -178,9 +181,9 @@ class PoseSkeletonPainter extends CustomPainter {
     }
 
     // Use overall form score for color
-    if (feedback!.score.percentage >= 85) {
+    if (currentFeedback.score.percentage >= 85) {
       return Colors.green.withOpacity(0.7);
-    } else if (feedback!.score.percentage >= 70) {
+    } else if (currentFeedback.score.percentage >= 70) {
       return Colors.yellow.withOpacity(0.7);
     } else {
       return Colors.orange.withOpacity(0.7);

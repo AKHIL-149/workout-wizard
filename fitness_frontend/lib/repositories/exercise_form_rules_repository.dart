@@ -31,18 +31,18 @@ class ExerciseFormRulesRepository {
 
   /// Get all exercise rules
   List<ExerciseFormRules> getAllExercises() {
-    _ensureLoaded();
-    return _database!.exercises;
+    final db = _ensureLoaded();
+    return db.exercises;
   }
 
   /// Find exercise rules by name (fuzzy matching with ExerciseNameMapper)
   ExerciseFormRules? findExerciseByName(String name) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
 
     // Use ExerciseNameMapper for intelligent fuzzy matching
     final matchResult = ExerciseNameMapper.findBestMatch(
       name,
-      _database!.exercises,
+      db.exercises,
       minSimilarity: 60.0,
     );
 
@@ -51,15 +51,15 @@ class ExerciseFormRulesRepository {
     }
 
     // Fallback to old method if no match found
-    return _database!.findExercise(name);
+    return db.findExercise(name);
   }
 
   /// Find exercise with detailed match information
   ExerciseMatchResult findExerciseWithConfidence(String name) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
     return ExerciseNameMapper.findBestMatch(
       name,
-      _database!.exercises,
+      db.exercises,
       minSimilarity: 50.0,
     );
   }
@@ -69,10 +69,10 @@ class ExerciseFormRulesRepository {
     String name, {
     int maxResults = 5,
   }) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
     return ExerciseNameMapper.findAllMatches(
       name,
-      _database!.exercises,
+      db.exercises,
       minSimilarity: 40.0,
       maxResults: maxResults,
     );
@@ -80,9 +80,9 @@ class ExerciseFormRulesRepository {
 
   /// Get exercise rules by ID
   ExerciseFormRules? getExerciseById(String id) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
     try {
-      return _database!.exercises.firstWhere((e) => e.id == id);
+      return db.exercises.firstWhere((e) => e.id == id);
     } catch (e) {
       return null;
     }
@@ -90,29 +90,29 @@ class ExerciseFormRulesRepository {
 
   /// Get violation definition
   ViolationDefinition? getViolationDefinition(String violationType) {
-    _ensureLoaded();
-    return _database!.getViolationDefinition(violationType);
+    final db = _ensureLoaded();
+    return db.getViolationDefinition(violationType);
   }
 
   /// Get all exercises of a specific type
   List<ExerciseFormRules> getExercisesByType(ExerciseType type) {
-    _ensureLoaded();
-    return _database!.exercises.where((e) => e.type == type).toList();
+    final db = _ensureLoaded();
+    return db.exercises.where((e) => e.type == type).toList();
   }
 
   /// Get all exercises by category
   List<ExerciseFormRules> getExercisesByCategory(String category) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
     return ExerciseNameMapper.filterByCategory(
-      _database!.exercises,
+      db.exercises,
       category,
     );
   }
 
   /// Get all unique categories
   List<String> getAllCategories() {
-    _ensureLoaded();
-    return ExerciseNameMapper.getAllCategories(_database!.exercises);
+    final db = _ensureLoaded();
+    return ExerciseNameMapper.getAllCategories(db.exercises);
   }
 
   /// Get exercises grouped by category
@@ -131,10 +131,10 @@ class ExerciseFormRulesRepository {
 
   /// Search exercises by partial name match
   List<ExerciseFormRules> searchExercises(String query) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
     final lowerQuery = query.toLowerCase();
 
-    return _database!.exercises.where((exercise) {
+    return db.exercises.where((exercise) {
       return exercise.matchesName(lowerQuery);
     }).toList();
   }
@@ -326,10 +326,10 @@ class ExerciseFormRulesRepository {
 
   /// Get suggested corrections for misspelled exercise name
   List<String> getSuggestedCorrections(String exerciseName, {int max = 3}) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
     return ExerciseNameMapper.suggestCorrections(
       exerciseName,
-      _database!.exercises,
+      db.exercises,
       maxSuggestions: max,
     );
   }
@@ -339,14 +339,14 @@ class ExerciseFormRulesRepository {
 
   /// Get total number of supported exercises
   int get exerciseCount {
-    _ensureLoaded();
-    return _database!.exercises.length;
+    final db = _ensureLoaded();
+    return db.exercises.length;
   }
 
   /// Get all violation types
   List<String> getAllViolationTypes() {
-    _ensureLoaded();
-    return _database!.violations.keys.toList();
+    final db = _ensureLoaded();
+    return db.violations.keys.toList();
   }
 
   /// Clear cached data (for testing or forcing reload)
@@ -356,12 +356,13 @@ class ExerciseFormRulesRepository {
   }
 
   /// Ensure rules are loaded before accessing
-  void _ensureLoaded() {
+  ExerciseFormRulesDatabase _ensureLoaded() {
     if (!_isLoaded || _database == null) {
       throw StateError(
         'Exercise form rules not loaded. Call loadRules() first.',
       );
     }
+    return _database!;
   }
 
   /// Get exercise suggestions based on partial input
@@ -382,9 +383,9 @@ class ExerciseFormRulesRepository {
 
   /// Get exercises that match multiple keywords
   List<ExerciseFormRules> findExercisesByKeywords(List<String> keywords) {
-    _ensureLoaded();
+    final db = _ensureLoaded();
 
-    return _database!.exercises.where((exercise) {
+    return db.exercises.where((exercise) {
       final searchableText = '${exercise.name} ${exercise.aliases.join(' ')}'
           .toLowerCase();
 
@@ -396,14 +397,14 @@ class ExerciseFormRulesRepository {
 
   /// Get detailed statistics about rules database
   Map<String, dynamic> getStatistics() {
-    _ensureLoaded();
+    final db = _ensureLoaded();
 
     final stats = <String, dynamic>{};
-    stats['totalExercises'] = _database!.exercises.length;
-    stats['totalViolations'] = _database!.violations.length;
+    stats['totalExercises'] = db.exercises.length;
+    stats['totalViolations'] = db.violations.length;
 
     final typeCounts = <String, int>{};
-    for (final exercise in _database!.exercises) {
+    for (final exercise in db.exercises) {
       final typeName = exercise.type.toString().split('.').last;
       typeCounts[typeName] = (typeCounts[typeName] ?? 0) + 1;
     }
@@ -411,7 +412,7 @@ class ExerciseFormRulesRepository {
 
     int totalAngleRules = 0;
     int totalAlignmentRules = 0;
-    for (final exercise in _database!.exercises) {
+    for (final exercise in db.exercises) {
       totalAngleRules += exercise.angleRules.length;
       totalAlignmentRules += exercise.alignmentRules.length;
     }

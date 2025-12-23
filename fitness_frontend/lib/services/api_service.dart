@@ -39,6 +39,13 @@ class ApiService {
     UserProfile profile, {
     int numRecommendations = 5,
   }) async {
+    // Input validation
+    if (numRecommendations <= 0 || numRecommendations > 100) {
+      throw ArgumentError(
+        'numRecommendations must be between 1 and 100, got $numRecommendations',
+      );
+    }
+
     try {
       final response = await http
           .post(
@@ -192,6 +199,11 @@ class ApiService {
 
   // Check if API is compatible with current client version
   Future<bool> checkCompatibility(String clientVersion) async {
+    // Input validation
+    if (clientVersion.trim().isEmpty) {
+      throw ArgumentError('clientVersion cannot be empty');
+    }
+
     try {
       final version = await getVersion();
       return version.isCompatibleWith(clientVersion);
