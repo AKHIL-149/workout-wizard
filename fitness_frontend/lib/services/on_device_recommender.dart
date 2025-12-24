@@ -30,9 +30,9 @@ class OnDeviceRecommender {
       }).toList();
 
       _isInitialized = true;
-      print('✅ On-device recommender initialized with ${_programDatabase.length} programs');
+      debugPrint('OnDeviceRecommender: ✅ On-device recommender initialized with ${_programDatabase.length} programs');
     } catch (e) {
-      print('❌ Failed to initialize on-device recommender: $e');
+      debugPrint('OnDeviceRecommender: ❌ Failed to initialize on-device recommender: $e');
       _isInitialized = false;
     }
   }

@@ -10,7 +10,6 @@ class CameraService {
   List<CameraDescription> _cameras = [];
   int _currentCameraIndex = 0;
   bool _isInitialized = false;
-  StreamSubscription? _imageStreamSubscription;
 
   /// Get the camera controller
   CameraController? get controller => _controller;
@@ -26,10 +25,14 @@ class CameraService {
   Future<void> initialize({
     CameraLensDirection direction = CameraLensDirection.front,
     ResolutionPreset resolution = ResolutionPreset.medium,
+    Duration timeout = const Duration(seconds: 10),
   }) async {
     try {
       // Get available cameras
-      _cameras = await availableCameras();
+      _cameras = await availableCameras().timeout(
+        timeout,
+        onTimeout: () => throw TimeoutException('Camera detection timed out'),
+      );
 
       if (_cameras.isEmpty) {
         throw CameraException(
@@ -56,8 +59,11 @@ class CameraService {
         imageFormatGroup: _getPlatformImageFormat(),
       );
 
-      // Initialize controller
-      await _controller!.initialize();
+      // Initialize controller with timeout
+      await _controller!.initialize().timeout(
+        timeout,
+        onTimeout: () => throw TimeoutException('Camera initialization timed out'),
+      );
 
       // Lock orientation to portrait for consistency (mobile only)
       if (_isMobilePlatform()) {
@@ -66,7 +72,7 @@ class CameraService {
         } catch (e) {
           // Orientation locking might not be supported on all platforms
           if (kDebugMode) {
-            print('Orientation locking not supported: $e');
+            debugPrint('CameraService: Orientation locking not supported: $e');
           }
         }
       }
@@ -106,13 +112,15 @@ class CameraService {
     } catch (e) {
       // Silently handle errors when stopping stream
       if (kDebugMode) {
-        print('Error stopping image stream: $e');
+        debugPrint('CameraService: Error stopping image stream: $e');
       }
     }
   }
 
   /// Switch between front and back camera
-  Future<void> switchCamera() async {
+  Future<void> switchCamera({
+    Duration timeout = const Duration(seconds: 10),
+  }) async {
     if (_cameras.length < 2) {
       throw Exception('Only one camera available');
     }
@@ -135,7 +143,10 @@ class CameraService {
         imageFormatGroup: _getPlatformImageFormat(),
       );
 
-      await _controller!.initialize();
+      await _controller!.initialize().timeout(
+        timeout,
+        onTimeout: () => throw TimeoutException('Camera switch timed out'),
+      );
 
       // Lock orientation (mobile only)
       if (_isMobilePlatform()) {
@@ -143,7 +154,7 @@ class CameraService {
           await _controller!.lockCaptureOrientation(DeviceOrientation.portraitUp);
         } catch (e) {
           if (kDebugMode) {
-            print('Orientation locking not supported: $e');
+            debugPrint('CameraService: Orientation locking not supported: $e');
           }
         }
       }
@@ -182,7 +193,7 @@ class CameraService {
       await _controller!.setFlashMode(mode);
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to set flash mode: $e');
+        debugPrint('CameraService: Failed to set flash mode: $e');
       }
     }
   }
@@ -198,7 +209,7 @@ class CameraService {
       await _controller!.setZoomLevel(clampedZoom);
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to set zoom level: $e');
+        debugPrint('CameraService: Failed to set zoom level: $e');
       }
     }
   }
@@ -211,7 +222,7 @@ class CameraService {
       await _controller!.pausePreview();
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to pause preview: $e');
+        debugPrint('CameraService: Failed to pause preview: $e');
       }
     }
   }
@@ -224,7 +235,7 @@ class CameraService {
       await _controller!.resumePreview();
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to resume preview: $e');
+        debugPrint('CameraService: Failed to resume preview: $e');
       }
     }
   }
@@ -239,10 +250,9 @@ class CameraService {
       lensDirection == CameraLensDirection.front;
 
   /// Dispose camera resources
-  void dispose() {
-    _imageStreamSubscription?.cancel();
-    stopImageStream();
-    _controller?.dispose();
+  Future<void> dispose() async {
+    await stopImageStream();
+    await _controller?.dispose();
     _controller = null;
     _isInitialized = false;
   }
@@ -250,7 +260,7 @@ class CameraService {
   /// Handle camera errors
   void _handleCameraError(CameraException e) {
     if (kDebugMode) {
-      print('Camera error: ${e.code} - ${e.description}');
+      debugPrint('CameraService: Camera error: ${e.code} - ${e.description}');
     }
 
     switch (e.code) {

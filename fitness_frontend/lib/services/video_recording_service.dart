@@ -52,7 +52,7 @@ class VideoRecordingService {
 
       return true;
     } catch (e) {
-      print('Error starting video recording: $e');
+      debugPrint('VideoRecordingService: Error starting video recording: $e');
       return false;
     }
   }
@@ -85,7 +85,7 @@ class VideoRecordingService {
 
       return videoFile.path;
     } catch (e) {
-      print('Error stopping video recording: $e');
+      debugPrint('VideoRecordingService: Error stopping video recording: $e');
       _isRecording = false;
       _currentVideoPath = null;
       _recordingStartTime = null;
@@ -102,7 +102,7 @@ class VideoRecordingService {
     try {
       await _cameraController!.pauseVideoRecording();
     } catch (e) {
-      print('Error pausing video recording: $e');
+      debugPrint('VideoRecordingService: Error pausing video recording: $e');
     }
   }
 
@@ -115,7 +115,7 @@ class VideoRecordingService {
     try {
       await _cameraController!.resumeVideoRecording();
     } catch (e) {
-      print('Error resuming video recording: $e');
+      debugPrint('VideoRecordingService: Error resuming video recording: $e');
     }
   }
 
@@ -159,7 +159,7 @@ class VideoRecordingService {
 
       return videoFiles;
     } catch (e) {
-      print('Error getting videos: $e');
+      debugPrint('VideoRecordingService: Error getting videos: $e');
       return [];
     }
   }
@@ -174,7 +174,7 @@ class VideoRecordingService {
       }
       return false;
     } catch (e) {
-      print('Error deleting video: $e');
+      debugPrint('VideoRecordingService: Error deleting video: $e');
       return false;
     }
   }
@@ -189,7 +189,7 @@ class VideoRecordingService {
         await videoDirectory.delete(recursive: true);
       }
     } catch (e) {
-      print('Error deleting all videos: $e');
+      debugPrint('VideoRecordingService: Error deleting all videos: $e');
     }
   }
 
@@ -205,7 +205,7 @@ class VideoRecordingService {
         }
       }
     } catch (e) {
-      print('Error deleting old videos: $e');
+      debugPrint('VideoRecordingService: Error deleting old videos: $e');
     }
   }
 
@@ -215,7 +215,7 @@ class VideoRecordingService {
       final videos = await getAllVideos();
       return videos.fold<int>(0, (sum, video) => sum + video.size);
     } catch (e) {
-      print('Error calculating storage: $e');
+      debugPrint('VideoRecordingService: Error calculating storage: $e');
       return 0;
     }
   }
