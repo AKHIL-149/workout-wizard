@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_profile.dart';
 import '../models/recommendation.dart';
+import '../utils/constants.dart';
 
 /// Service for local data persistence and offline capabilities
 class StorageService {
@@ -112,12 +113,19 @@ class StorageService {
   Future<void> addToSearchHistory(String query) async {
     final prefs = await SharedPreferences.getInstance();
     final history = await getSearchHistory();
-    history.remove(query); // Remove if already exists
-    history.insert(0, query); // Add to beginning
-    if (history.length > 10) {
-      history.removeLast(); // Keep only last 10
-    }
-    await prefs.setStringList(_searchHistoryKey, history);
+
+    // Use more efficient approach: filter and rebuild list
+    final updatedHistory = [
+      query,
+      ...history.where((item) => item != query),
+    ];
+
+    // Limit to most recent items
+    final limitedHistory = updatedHistory.length > AppConstants.maxSearchHistoryItems
+        ? updatedHistory.sublist(0, AppConstants.maxSearchHistoryItems)
+        : updatedHistory;
+
+    await prefs.setStringList(_searchHistoryKey, limitedHistory);
   }
 
   /// Get search history

@@ -3,6 +3,7 @@ import '../models/pose_data.dart';
 import '../models/form_analysis.dart';
 import '../models/exercise_form_rules.dart';
 import '../utils/angle_calculator.dart';
+import '../utils/constants.dart';
 
 /// Service for analyzing exercise form and detecting reps
 class FormAnalysisService {
@@ -20,7 +21,7 @@ class FormAnalysisService {
   final List<FormFeedback> _feedbackHistory = [];
   final List<RepAnalysis> _repHistory = [];
   final List<PoseSnapshot> _poseHistory = [];
-  final int _maxHistorySize = 100;
+  final int _maxHistorySize = AppConstants.maxHistorySize;
 
   // Streaming
   final _feedbackController = StreamController<FormFeedback>.broadcast();
@@ -33,8 +34,8 @@ class FormAnalysisService {
 
   FormAnalysisService({
     required ExerciseFormRules exerciseRules,
-    this.minConfidenceThreshold = 0.6,
-    this.feedbackCooldownMs = 1000,
+    this.minConfidenceThreshold = AppConstants.minLandmarkConfidence,
+    this.feedbackCooldownMs = AppConstants.defaultFeedbackCooldownMs,
   }) : _exerciseRules = exerciseRules;
 
   /// Stream of real-time form feedback
@@ -131,7 +132,9 @@ class FormAnalysisService {
       }
 
       // Check confidence
-      if (point1.confidence < 0.5 || vertex.confidence < 0.5 || point2.confidence < 0.5) {
+      if (point1.confidence < AppConstants.minPoseConfidence ||
+          vertex.confidence < AppConstants.minPoseConfidence ||
+          point2.confidence < AppConstants.minPoseConfidence) {
         continue;
       }
 
@@ -173,7 +176,7 @@ class FormAnalysisService {
       }
 
       // Check confidence
-      if (landmarks.any((l) => l.confidence < 0.5)) {
+      if (landmarks.any((l) => l.confidence < AppConstants.minPoseConfidence)) {
         continue;
       }
 
@@ -351,7 +354,7 @@ class FormAnalysisService {
     final rule = _exerciseRules.repDetection;
     final keyJoint = pose.getLandmark(rule.keyJoint.replaceAll('LEFT', side));
 
-    if (keyJoint == null || keyJoint.confidence < 0.5) {
+    if (keyJoint == null || keyJoint.confidence < AppConstants.minPoseConfidence) {
       return;
     }
 
@@ -411,7 +414,7 @@ class FormAnalysisService {
     final rule = _exerciseRules.repDetection;
     final keyJoint = pose.getLandmark(rule.keyJoint.replaceAll('LEFT', side));
 
-    if (keyJoint == null || keyJoint.confidence < 0.5) {
+    if (keyJoint == null || keyJoint.confidence < AppConstants.minPoseConfidence) {
       return;
     }
 

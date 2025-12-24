@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/pose_data.dart';
 import '../models/form_analysis.dart';
+import '../utils/constants.dart';
 
 /// Custom painter that draws pose skeleton overlay on camera preview
 class PoseSkeletonPainter extends CustomPainter {
@@ -49,7 +50,8 @@ class PoseSkeletonPainter extends CustomPainter {
       final end = pose.getLandmark(connection.end);
 
       if (start != null && end != null &&
-          start.confidence > 0.5 && end.confidence > 0.5) {
+          start.confidence > AppConstants.minPoseConfidence &&
+          end.confidence > AppConstants.minPoseConfidence) {
 
         // Determine color based on form feedback
         paint.color = _getConnectionColor(connection.start, connection.end);
@@ -72,7 +74,7 @@ class PoseSkeletonPainter extends CustomPainter {
   /// Draw landmarks (joints)
   void _drawLandmarks(Canvas canvas, PoseSnapshot pose, double scale, double offsetX, double offsetY) {
     for (final landmark in pose.landmarks) {
-      if (landmark.confidence < 0.5) continue;
+      if (landmark.confidence < AppConstants.minPoseConfidence) continue;
 
       final position = Offset(
         landmark.x * scale + offsetX,
@@ -81,7 +83,7 @@ class PoseSkeletonPainter extends CustomPainter {
 
       // Determine color and size based on confidence and feedback
       final color = _getLandmarkColor(landmark.name);
-      final radius = landmark.confidence > 0.8 ? 6.0 : 4.0;
+      final radius = landmark.confidence > AppConstants.highPoseConfidence ? 6.0 : 4.0;
 
       // Draw joint circle
       final paint = Paint()
