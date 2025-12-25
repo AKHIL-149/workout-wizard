@@ -392,7 +392,7 @@ class _FormCorrectionSettingsScreenState
     final stats = _storageService.getDatabaseStats();
     final sizeKB = stats['databaseSizeKB'] ?? 0;
     if (sizeKB < 1024) {
-      return '${sizeKB} KB';
+      return '$sizeKB KB';
     } else {
       return '${(sizeKB / 1024).toStringAsFixed(1)} MB';
     }

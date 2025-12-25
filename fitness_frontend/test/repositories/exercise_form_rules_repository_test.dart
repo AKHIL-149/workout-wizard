@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fitness_frontend/repositories/exercise_form_rules_repository.dart';
 import 'package:fitness_frontend/models/exercise_form_rules.dart';
 import 'package:fitness_frontend/models/form_analysis.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -281,7 +281,7 @@ class ViolationListWidget extends StatelessWidget {
             count: entry.value,
             severity: severity,
           );
-        }).toList(),
+        }),
       ],
     );
   }

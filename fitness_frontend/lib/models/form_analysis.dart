@@ -143,7 +143,7 @@ class FormScore {
   Map<String, dynamic> toJson() => {
         'percentage': percentage,
         'grade': grade,
-        'displayColor': displayColor.value,
+        'displayColor': displayColor.toARGB32(),
       };
 
   @override

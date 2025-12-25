@@ -156,7 +156,7 @@ class ExportShareService {
       final rep = session.repHistory[i];
       final emoji = rep.isGoodRep ? '✓' : '⚠';
       buffer.writeln(
-        'Rep ${i + 1}: ${emoji} ${rep.formScore.toStringAsFixed(1)}% ${rep.violations.isEmpty ? '(Perfect!)' : '(${rep.violations.length} issues)'}',
+        'Rep ${i + 1}: $emoji ${rep.formScore.toStringAsFixed(1)}% ${rep.violations.isEmpty ? '(Perfect!)' : '(${rep.violations.length} issues)'}',
       );
     }
 

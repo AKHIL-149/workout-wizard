@@ -327,7 +327,7 @@ class PostWorkoutAnalysisScreen extends StatelessWidget {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -468,7 +468,7 @@ class PostWorkoutAnalysisScreen extends StatelessWidget {
                 title: Text(format.displayName),
                 onTap: () => Navigator.pop(context, format),
               );
-            }).toList(),
+            }),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.share),
