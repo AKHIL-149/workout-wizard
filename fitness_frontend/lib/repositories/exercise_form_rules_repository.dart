@@ -189,7 +189,7 @@ class ExerciseFormRulesRepository {
     switch (category) {
       case 'squat':
         angleRules.addAll([
-          AngleRule(
+          const AngleRule(
             name: 'knee_angle',
             joints: ['LEFT_HIP', 'LEFT_KNEE', 'LEFT_ANKLE'],
             minDegrees: 70,
@@ -199,7 +199,7 @@ class ExerciseFormRulesRepository {
             message: 'Squat to at least parallel depth',
             severity: Severity.warning,
           ),
-          AngleRule(
+          const AngleRule(
             name: 'back_angle',
             joints: ['LEFT_SHOULDER', 'LEFT_HIP', 'LEFT_KNEE'],
             minDegrees: 140,
@@ -210,7 +210,7 @@ class ExerciseFormRulesRepository {
             severity: Severity.critical,
           ),
         ]);
-        repDetection = RepDetectionRule(
+        repDetection = const RepDetectionRule(
           keyJoint: 'LEFT_HIP',
           axis: MovementAxis.y,
           threshold: 0.15,
@@ -221,7 +221,7 @@ class ExerciseFormRulesRepository {
 
       case 'hinge':
         angleRules.addAll([
-          AngleRule(
+          const AngleRule(
             name: 'back_straight',
             joints: ['LEFT_SHOULDER', 'LEFT_HIP', 'LEFT_KNEE'],
             minDegrees: 150,
@@ -232,7 +232,7 @@ class ExerciseFormRulesRepository {
             severity: Severity.critical,
           ),
         ]);
-        repDetection = RepDetectionRule(
+        repDetection = const RepDetectionRule(
           keyJoint: 'LEFT_HIP',
           axis: MovementAxis.y,
           threshold: 0.18,
@@ -244,7 +244,7 @@ class ExerciseFormRulesRepository {
       case 'horizontal_push':
       case 'vertical_push':
         angleRules.addAll([
-          AngleRule(
+          const AngleRule(
             name: 'elbow_extension',
             joints: ['LEFT_SHOULDER', 'LEFT_ELBOW', 'LEFT_WRIST'],
             minDegrees: 165,
@@ -268,7 +268,7 @@ class ExerciseFormRulesRepository {
 
       case 'core':
         angleRules.addAll([
-          AngleRule(
+          const AngleRule(
             name: 'body_alignment',
             joints: ['LEFT_ANKLE', 'LEFT_HIP', 'LEFT_SHOULDER'],
             minDegrees: 165,
@@ -279,7 +279,7 @@ class ExerciseFormRulesRepository {
             severity: Severity.critical,
           ),
         ]);
-        repDetection = RepDetectionRule(
+        repDetection = const RepDetectionRule(
           keyJoint: 'LEFT_HIP',
           axis: MovementAxis.y,
           threshold: 0.05,
@@ -291,7 +291,7 @@ class ExerciseFormRulesRepository {
       default:
         // Generic fallback for unknown exercises
         angleRules.add(
-          AngleRule(
+          const AngleRule(
             name: 'back_straight',
             joints: ['LEFT_SHOULDER', 'LEFT_HIP', 'LEFT_KNEE'],
             minDegrees: 140,
@@ -302,7 +302,7 @@ class ExerciseFormRulesRepository {
             severity: Severity.warning,
           ),
         );
-        repDetection = RepDetectionRule(
+        repDetection = const RepDetectionRule(
           keyJoint: 'LEFT_HIP',
           axis: MovementAxis.y,
           threshold: 0.1,
