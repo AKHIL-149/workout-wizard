@@ -27,7 +27,7 @@ class _FormCorrectionSettingsScreenState
   }
 
   Future<void> _loadSettings() async {
-    final audioSettings = await _storageService.getSetting<Map>(
+    final audioSettings = _storageService.getSetting<Map>(
       'audio_settings',
       defaultValue: {},
     );

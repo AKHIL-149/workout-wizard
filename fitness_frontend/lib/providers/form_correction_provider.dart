@@ -73,7 +73,7 @@ class FormCorrectionProvider with ChangeNotifier {
     await _audioService.initialize();
 
     // Load audio settings
-    final audioSettings = await _storageService.getSetting<Map>(
+    final audioSettings = _storageService.getSetting<Map>(
       'audio_settings',
       defaultValue: {},
     );
@@ -256,7 +256,7 @@ class FormCorrectionProvider with ChangeNotifier {
 
   /// Get session history for this exercise
   Future<List<FormCorrectionSession>> getSessionHistory() async {
-    return await _storageService.getSessionsByExercise(_exerciseName);
+    return _storageService.getSessionsByExercise(_exerciseName);
   }
 
   /// Get progress over time (last N sessions)

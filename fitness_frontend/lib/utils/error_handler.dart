@@ -15,6 +15,7 @@ class ErrorHandler {
     try {
       return await operation();
     } on AppException catch (e) {
+      if (!context.mounted) return null;
       if (showDialog) {
         await ErrorDialog.show(context, e);
       } else if (showSnackbar) {
@@ -23,6 +24,7 @@ class ErrorHandler {
       onError?.call();
       return null;
     } catch (e) {
+      if (!context.mounted) return null;
       final unknownError = UnknownException(
         'An unexpected error occurred',
         details: e.toString(),

@@ -46,7 +46,8 @@ class TensorFlowLitePoseService implements PoseDetectionService {
     'RIGHT_ANKLE',
   ];
 
-  // Model path
+  // Model path (kept for future use when TFLite is re-enabled)
+  // ignore: unused_field
   final String _modelPath;
 
   TensorFlowLitePoseService({

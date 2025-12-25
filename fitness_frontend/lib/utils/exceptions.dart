@@ -16,8 +16,7 @@ abstract class AppException implements Exception {
 
 /// Network-related exceptions
 class NetworkException extends AppException {
-  NetworkException(String message, {String? details, int? statusCode})
-      : super(message, details: details, statusCode: statusCode);
+  NetworkException(super.message, {super.details, super.statusCode});
 
   @override
   String get userMessage => 'Network error. Please check your connection and try again.';
@@ -34,8 +33,7 @@ class TimeoutException extends NetworkException {
 
 /// Server returned an error response
 class ServerException extends AppException {
-  ServerException(String message, {String? details, int? statusCode})
-      : super(message, details: details, statusCode: statusCode);
+  ServerException(super.message, {super.details, super.statusCode});
 
   @override
   String get userMessage {
@@ -52,8 +50,7 @@ class ServerException extends AppException {
 
 /// API returned invalid/unexpected data
 class DataFormatException extends AppException {
-  DataFormatException(String message, {String? details})
-      : super(message, details: details);
+  DataFormatException(super.message, {super.details});
 
   @override
   String get userMessage => 'Invalid data received. Please try again.';
@@ -71,8 +68,7 @@ class NoRecommendationsException extends AppException {
 
 /// Storage/persistence exceptions
 class StorageException extends AppException {
-  StorageException(String message, {String? details})
-      : super(message, details: details);
+  StorageException(super.message, {super.details});
 
   @override
   String get userMessage => 'Error saving data. Please try again.';
@@ -82,8 +78,7 @@ class StorageException extends AppException {
 class ValidationException extends AppException {
   final Map<String, String>? fieldErrors;
 
-  ValidationException(String message, {this.fieldErrors, String? details})
-      : super(message, details: details);
+  ValidationException(super.message, {this.fieldErrors, super.details});
 
   @override
   String get userMessage => message;
@@ -127,8 +122,7 @@ AppException fromException(dynamic error) {
 
 /// Generic exception for unknown errors
 class UnknownException extends AppException {
-  UnknownException(String message, {String? details})
-      : super(message, details: details);
+  UnknownException(super.message, {super.details});
 
   @override
   String get userMessage => 'An unexpected error occurred. Please try again.';

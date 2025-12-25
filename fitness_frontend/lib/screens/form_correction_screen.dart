@@ -275,9 +275,11 @@ class _FormCorrectionScreenState extends State<FormCorrectionScreen>
 
       await _startDetection();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to switch camera: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to switch camera: ${e.toString()}')),
+        );
+      }
     }
   }
 
@@ -308,7 +310,9 @@ class _FormCorrectionScreenState extends State<FormCorrectionScreen>
           ),
         ),
       ).then((_) {
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       });
     }
   }
