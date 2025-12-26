@@ -175,7 +175,6 @@ class StorageService {
   /// Export storage data for backup
   Future<Map<String, dynamic>> exportData() async {
     final profile = await getLastUserProfile();
-    final recommendations = await getRecommendations();
     final favorites = await getFavorites();
     final searchHistory = await getSearchHistory();
     final viewedPrograms = await getViewedPrograms();
@@ -183,7 +182,6 @@ class StorageService {
 
     return {
       'profile': profile?.toJson(),
-      'recommendations': recommendations.map((r) => r.toJson()).toList(),
       'favorites': favorites,
       'search_history': searchHistory,
       'viewed_programs': viewedPrograms,

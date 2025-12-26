@@ -29,6 +29,17 @@ class UserProfile {
       'preferred_style': preferredStyle,
     };
   }
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      fitnessLevel: json['fitness_level'] as String,
+      goals: List<String>.from(json['goals'] as List),
+      equipment: json['equipment'] as String,
+      preferredDuration: json['preferred_duration'] as String?,
+      preferredFrequency: json['preferred_frequency'] as int?,
+      preferredStyle: json['preferred_style'] as String?,
+    );
+  }
 }
 
 // Enhanced goal option with visual properties

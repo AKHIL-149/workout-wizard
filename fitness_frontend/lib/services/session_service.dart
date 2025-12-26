@@ -197,7 +197,7 @@ class SessionService {
 
     if (data['total_time_spent'] != null) {
       _totalTimeSpent = data['total_time_spent'] as int;
-      await prefs.setInt(_totalTimeSpentKey, _totalTimeSpent);
+      await prefs.setInt(_totalTimeKey, _totalTimeSpent);
     }
   }
 }

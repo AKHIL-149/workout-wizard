@@ -206,7 +206,7 @@ class FormCorrectionStorageService {
           }
         } else {
           // Replace all - clear existing and import backup
-          await clearAllSessions();
+          await deleteAllSessions();
           for (final sessionData in sessions) {
             final session = FormCorrectionSession.fromJson(
               Map<String, dynamic>.from(sessionData),

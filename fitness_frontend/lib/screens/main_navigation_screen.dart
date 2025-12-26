@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'recommendation_form_screen.dart';
 import 'analytics_dashboard_screen.dart';
+import 'settings_screen.dart';
 import '../services/gamification_service.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -18,12 +19,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const HomeScreen(),
     const RecommendationFormScreen(),
     const AnalyticsDashboardScreen(),
+    const SettingsScreen(),
   ];
 
   final List<String> _titles = [
     'Home',
     'Find Program',
     'My Progress',
+    'Settings',
   ];
 
   @override
@@ -56,6 +59,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             icon: _buildAnalyticsIcon(),
             activeIcon: _buildAnalyticsIcon(active: true),
             label: _titles[2],
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings_outlined),
+            activeIcon: const Icon(Icons.settings),
+            label: _titles[3],
           ),
         ],
       ),

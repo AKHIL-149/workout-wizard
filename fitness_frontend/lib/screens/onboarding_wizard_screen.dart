@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import '../models/user_profile.dart';
 import '../services/session_service.dart';
 import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
+import '../services/backup_service.dart';
+import '../services/storage_service.dart';
+import '../services/form_correction_storage_service.dart';
+import '../widgets/backup_dialogs.dart';
 import 'main_navigation_screen.dart';
 
 /// Multi-step onboarding wizard for new users
@@ -268,9 +273,118 @@ class _WelcomePage extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          OutlinedButton.icon(
+            onPressed: () => _handleRestore(context),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 56),
+            ),
+            icon: const Icon(Icons.restore),
+            label: const Text('Restore from Backup'),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _handleRestore(BuildContext context) async {
+    try {
+      // Pick backup file
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['wwb'],
+        dialogTitle: 'Select Backup File',
+      );
+
+      if (result == null || result.files.single.path == null) {
+        return; // User cancelled
+      }
+
+      if (!context.mounted) return;
+
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      final filePath = result.files.single.path!;
+      final backupService = BackupService(
+        storageService: StorageService(),
+        sessionService: SessionService(),
+        analyticsService: AnalyticsService(),
+        gamificationService: GamificationService(),
+        formCorrectionService: FormCorrectionStorageService(),
+      );
+
+      // Try to preview and import
+      String? password;
+      try {
+        await backupService.previewBackup(filePath);
+      } catch (e) {
+        // Encrypted, ask for password
+        if (!context.mounted) return;
+        Navigator.pop(context); // Close loading
+
+        password = await PasswordDialog.show(
+          context,
+          isEncrypt: false,
+          hint: 'This backup is encrypted.',
+        );
+
+        if (password == null) return;
+
+        if (!context.mounted) return;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      // Import
+      final importResult = await backupService.importAllData(
+        filePath,
+        password: password,
+      );
+
+      if (!context.mounted) return;
+      Navigator.pop(context); // Close loading
+
+      if (importResult.success) {
+        await BackupSuccessDialog.show(
+          context,
+          title: 'Restore Complete',
+          message: 'Your data has been restored! Taking you to the app...',
+          summary: importResult.summary,
+        );
+
+        if (!context.mounted) return;
+
+        // Navigate to main app
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
+        );
+      } else {
+        await BackupErrorDialog.show(
+          context,
+          title: 'Restore Failed',
+          message: importResult.errorMessage ?? 'Unknown error',
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context); // Close loading if open
+        await BackupErrorDialog.show(
+          context,
+          title: 'Restore Failed',
+          message: 'An error occurred',
+          details: e.toString(),
+        );
+      }
+    }
   }
 
   Widget _buildFeatureItem(

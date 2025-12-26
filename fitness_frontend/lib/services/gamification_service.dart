@@ -365,37 +365,54 @@ class GamificationService {
     bool merge = false,
   }) async {
     if (data['achievements'] != null) {
-      final backupAchievements = (data['achievements'] as List)
-          .map((json) => Achievement.fromJson(json as Map<String, dynamic>))
-          .toList();
-
       if (merge) {
         // Merge achievements intelligently
         // Keep unlocked state if unlocked in either, merge progress
-        for (final backupAchievement in backupAchievements) {
-          final existingIndex = _achievements.indexWhere(
-            (a) => a.id == backupAchievement.id,
-          );
+        final backupAchievementsList = data['achievements'] as List;
 
-          if (existingIndex != -1) {
-            final existing = _achievements[existingIndex];
-            _achievements[existingIndex] = Achievement(
-              id: existing.id,
-              title: existing.title,
-              description: existing.description,
-              icon: existing.icon,
-              points: existing.points,
-              unlocked: existing.unlocked || backupAchievement.unlocked,
-              unlockedAt: existing.unlockedAt ?? backupAchievement.unlockedAt,
-              progress: existing.progress > backupAchievement.progress
-                  ? existing.progress
-                  : backupAchievement.progress,
-              maxProgress: existing.maxProgress,
-            );
+        for (var i = 0; i < backupAchievementsList.length && i < _achievements.length; i++) {
+          final backupData = backupAchievementsList[i] as Map<String, dynamic>;
+          final existing = _achievements[i];
+
+          // Merge: keep unlocked if unlocked in either
+          final wasUnlocked = existing.unlocked || (backupData['unlocked'] as bool? ?? false);
+
+          // Merge: keep higher progress
+          final backupProgress = backupData['current_progress'] as int? ?? 0;
+          final mergedProgress = existing.currentProgress > backupProgress
+              ? existing.currentProgress
+              : backupProgress;
+
+          // Merge: keep earlier unlock date if both unlocked
+          DateTime? mergedUnlockDate = existing.unlockedDate;
+          if (backupData['unlocked_date'] != null) {
+            final backupUnlockDate = DateTime.parse(backupData['unlocked_date'] as String);
+            if (mergedUnlockDate == null || backupUnlockDate.isBefore(mergedUnlockDate)) {
+              mergedUnlockDate = backupUnlockDate;
+            }
           }
+
+          _achievements[i] = Achievement(
+            id: existing.id,
+            title: existing.title,
+            description: existing.description,
+            icon: existing.icon,
+            color: existing.color,
+            requiredCount: existing.requiredCount,
+            unlocked: wasUnlocked,
+            unlockedDate: mergedUnlockDate,
+            currentProgress: mergedProgress,
+          );
         }
       } else {
-        _achievements = backupAchievements;
+        // Replace: load achievements from backup
+        final backupAchievementsList = data['achievements'] as List;
+        for (var i = 0; i < backupAchievementsList.length && i < _achievements.length; i++) {
+          _achievements[i] = Achievement.fromJson(
+            backupAchievementsList[i] as Map<String, dynamic>,
+            _achievements[i],
+          );
+        }
       }
     }
 
@@ -436,6 +453,6 @@ class GamificationService {
     }
 
     // Save all updated data
-    await _saveData();
+    await _saveProgress();
   }
 }
