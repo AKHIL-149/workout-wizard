@@ -181,31 +181,66 @@ class FormCorrectionStorageService {
   }
 
   /// Import data (from backup)
-  Future<void> importData(Map<String, dynamic> data) async {
+  Future<void> importData(Map<String, dynamic> data, {bool merge = false}) async {
     try {
       // Import sessions
       if (data.containsKey('sessions')) {
         final sessions = data['sessions'] as List;
-        for (final sessionData in sessions) {
-          final session = FormCorrectionSession.fromJson(
-            Map<String, dynamic>.from(sessionData),
-          );
-          await saveSession(session);
+
+        if (merge) {
+          // Merge sessions - check for duplicates by session_id
+          final existingSessionIds = getAllSessions().map((s) => s.sessionId).toSet();
+
+          for (final sessionData in sessions) {
+            final session = FormCorrectionSession.fromJson(
+              Map<String, dynamic>.from(sessionData),
+            );
+
+            // Only add if not duplicate, or update if backup is newer
+            if (!existingSessionIds.contains(session.sessionId)) {
+              await saveSession(session);
+            } else {
+              // Could add logic to keep newer session based on timestamp
+              // For now, skip duplicates when merging
+            }
+          }
+        } else {
+          // Replace all - clear existing and import backup
+          await clearAllSessions();
+          for (final sessionData in sessions) {
+            final session = FormCorrectionSession.fromJson(
+              Map<String, dynamic>.from(sessionData),
+            );
+            await saveSession(session);
+          }
         }
       }
 
       // Import statistics
       if (data.containsKey('statistics')) {
         final stats = data['statistics'] as Map<String, dynamic>;
-        for (final entry in stats.entries) {
-          await saveExerciseStatistics(
-            entry.key,
-            Map<String, dynamic>.from(entry.value),
-          );
+
+        if (merge) {
+          // Merge statistics - combine with existing
+          for (final entry in stats.entries) {
+            await saveExerciseStatistics(
+              entry.key,
+              Map<String, dynamic>.from(entry.value),
+            );
+          }
+        } else {
+          // Replace all statistics
+          await _statsBox.clear();
+          for (final entry in stats.entries) {
+            await saveExerciseStatistics(
+              entry.key,
+              Map<String, dynamic>.from(entry.value),
+            );
+          }
         }
       }
 
-      // Import settings
+      // Import settings (always use backup settings for consistency)
       if (data.containsKey('settings')) {
         final settings = Map<String, dynamic>.from(data['settings']);
         await _settingsBox.put('user_settings', settings);

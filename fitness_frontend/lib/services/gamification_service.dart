@@ -347,4 +347,95 @@ class GamificationService {
   int get currentStreak => _currentStreak;
   int get longestStreak => _longestStreak;
   int get totalPoints => _totalPoints;
+
+  /// Export gamification data for backup
+  Future<Map<String, dynamic>> exportGamificationData() async {
+    return {
+      'achievements': _achievements.map((a) => a.toJson()).toList(),
+      'current_streak': _currentStreak,
+      'longest_streak': _longestStreak,
+      'total_points': _totalPoints,
+      'last_activity_date': _lastActivityDate?.toIso8601String(),
+    };
+  }
+
+  /// Import gamification data from backup
+  Future<void> importGamificationData(
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) async {
+    if (data['achievements'] != null) {
+      final backupAchievements = (data['achievements'] as List)
+          .map((json) => Achievement.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      if (merge) {
+        // Merge achievements intelligently
+        // Keep unlocked state if unlocked in either, merge progress
+        for (final backupAchievement in backupAchievements) {
+          final existingIndex = _achievements.indexWhere(
+            (a) => a.id == backupAchievement.id,
+          );
+
+          if (existingIndex != -1) {
+            final existing = _achievements[existingIndex];
+            _achievements[existingIndex] = Achievement(
+              id: existing.id,
+              title: existing.title,
+              description: existing.description,
+              icon: existing.icon,
+              points: existing.points,
+              unlocked: existing.unlocked || backupAchievement.unlocked,
+              unlockedAt: existing.unlockedAt ?? backupAchievement.unlockedAt,
+              progress: existing.progress > backupAchievement.progress
+                  ? existing.progress
+                  : backupAchievement.progress,
+              maxProgress: existing.maxProgress,
+            );
+          }
+        }
+      } else {
+        _achievements = backupAchievements;
+      }
+    }
+
+    if (data['current_streak'] != null && data['longest_streak'] != null) {
+      if (merge) {
+        // Keep higher streak values
+        _currentStreak = _currentStreak > (data['current_streak'] as int)
+            ? _currentStreak
+            : data['current_streak'] as int;
+        _longestStreak = _longestStreak > (data['longest_streak'] as int)
+            ? _longestStreak
+            : data['longest_streak'] as int;
+      } else {
+        _currentStreak = data['current_streak'] as int;
+        _longestStreak = data['longest_streak'] as int;
+      }
+    }
+
+    if (data['total_points'] != null) {
+      if (merge) {
+        // Add points together when merging
+        _totalPoints += data['total_points'] as int;
+      } else {
+        _totalPoints = data['total_points'] as int;
+      }
+    }
+
+    if (data['last_activity_date'] != null) {
+      final backupLastActivity = DateTime.parse(data['last_activity_date'] as String);
+      if (merge) {
+        // Keep most recent activity date
+        if (_lastActivityDate == null || backupLastActivity.isAfter(_lastActivityDate!)) {
+          _lastActivityDate = backupLastActivity;
+        }
+      } else {
+        _lastActivityDate = backupLastActivity;
+      }
+    }
+
+    // Save all updated data
+    await _saveData();
+  }
 }

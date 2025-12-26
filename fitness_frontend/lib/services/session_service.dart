@@ -161,4 +161,43 @@ class SessionService {
     }
     return 'Welcome back to Workout Wizard!';
   }
+
+  /// Export session data for backup (excluding fingerprint for privacy)
+  Future<Map<String, dynamic>> exportSessionData() async {
+    return {
+      'session_count': _sessionCount,
+      'first_visit': _firstVisit?.toIso8601String(),
+      'last_visit': _lastVisit?.toIso8601String(),
+      'total_time_spent': _totalTimeSpent,
+    };
+  }
+
+  /// Import session data from backup (regenerates fingerprint)
+  Future<void> importSessionData(Map<String, dynamic> data) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Regenerate fingerprint for new device (don't import old one)
+    // The fingerprint will be generated during initialize()
+
+    // Import session metadata
+    if (data['session_count'] != null) {
+      _sessionCount = data['session_count'] as int;
+      await prefs.setInt(_sessionCountKey, _sessionCount);
+    }
+
+    if (data['first_visit'] != null) {
+      _firstVisit = DateTime.parse(data['first_visit'] as String);
+      await prefs.setString(_firstVisitKey, _firstVisit!.toIso8601String());
+    }
+
+    if (data['last_visit'] != null) {
+      _lastVisit = DateTime.parse(data['last_visit'] as String);
+      await prefs.setString(_lastVisitKey, _lastVisit!.toIso8601String());
+    }
+
+    if (data['total_time_spent'] != null) {
+      _totalTimeSpent = data['total_time_spent'] as int;
+      await prefs.setInt(_totalTimeSpentKey, _totalTimeSpent);
+    }
+  }
 }

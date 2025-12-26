@@ -286,4 +286,53 @@ class AnalyticsService {
   // Getters
   List<UserAction> get allActions => _actions;
   Map<String, dynamic> get preferences => _preferences;
+
+  /// Export analytics data for backup
+  Future<Map<String, dynamic>> exportAnalytics() async {
+    return {
+      'user_actions': _actions.map((action) => action.toJson()).toList(),
+      'user_preferences': _preferences,
+    };
+  }
+
+  /// Import analytics data from backup
+  Future<void> importAnalytics(Map<String, dynamic> data, {bool merge = false}) async {
+    if (data['user_actions'] != null) {
+      final backupActions = (data['user_actions'] as List)
+          .map((json) => UserAction.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      if (merge) {
+        // Merge actions, avoiding duplicates by timestamp
+        final existingTimestamps = _actions.map((a) => a.timestamp).toSet();
+        final newActions = backupActions
+            .where((action) => !existingTimestamps.contains(action.timestamp))
+            .toList();
+        _actions.addAll(newActions);
+
+        // Keep only most recent actions (up to max size)
+        _actions.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        if (_actions.length > _maxActions) {
+          _actions = _actions.sublist(0, _maxActions);
+        }
+      } else {
+        _actions = backupActions;
+      }
+
+      await _saveActions();
+    }
+
+    if (data['user_preferences'] != null) {
+      final backupPreferences = Map<String, dynamic>.from(data['user_preferences'] as Map);
+
+      if (merge) {
+        // Merge preferences, backup values take precedence for conflicts
+        _preferences.addAll(backupPreferences);
+      } else {
+        _preferences = backupPreferences;
+      }
+
+      await _savePreferences();
+    }
+  }
 }

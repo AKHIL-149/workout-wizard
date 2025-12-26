@@ -172,6 +172,95 @@ class StorageService {
     return prefs.getStringList(_completedProgramsKey) ?? [];
   }
 
+  /// Export storage data for backup
+  Future<Map<String, dynamic>> exportData() async {
+    final profile = await getLastUserProfile();
+    final recommendations = await getRecommendations();
+    final favorites = await getFavorites();
+    final searchHistory = await getSearchHistory();
+    final viewedPrograms = await getViewedPrograms();
+    final completedPrograms = await getCompletedPrograms();
+
+    return {
+      'profile': profile?.toJson(),
+      'recommendations': recommendations.map((r) => r.toJson()).toList(),
+      'favorites': favorites,
+      'search_history': searchHistory,
+      'viewed_programs': viewedPrograms,
+      'completed_programs': completedPrograms,
+    };
+  }
+
+  /// Import storage data from backup
+  Future<void> importData(Map<String, dynamic> data, {bool merge = false}) async {
+    // Import user profile (always replace)
+    if (data['user_profile'] != null) {
+      final profileData = data['user_profile'] as Map<String, dynamic>;
+      final profile = UserProfile.fromJson(profileData);
+      await saveUserProfile(profile);
+    }
+
+    // Import favorites
+    if (data['favorites'] != null) {
+      final backupFavorites = List<String>.from(data['favorites'] as List);
+      if (merge) {
+        final currentFavorites = await getFavorites();
+        final mergedFavorites = {...currentFavorites, ...backupFavorites}.toList();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_favoriteProgramsKey, mergedFavorites);
+      } else {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_favoriteProgramsKey, backupFavorites);
+      }
+    }
+
+    // Import search history
+    if (data['search_history'] != null) {
+      final backupHistory = List<String>.from(data['search_history'] as List);
+      if (merge) {
+        final currentHistory = await getSearchHistory();
+        final mergedHistory = [...backupHistory, ...currentHistory]
+            .toSet()
+            .toList()
+            .take(AppConstants.maxSearchHistoryItems)
+            .toList();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_searchHistoryKey, mergedHistory);
+      } else {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_searchHistoryKey, backupHistory);
+      }
+    }
+
+    // Import viewed programs
+    if (data['viewed_programs'] != null) {
+      final backupViewed = List<String>.from(data['viewed_programs'] as List);
+      if (merge) {
+        final currentViewed = await getViewedPrograms();
+        final mergedViewed = {...currentViewed, ...backupViewed}.toList();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_viewedProgramsKey, mergedViewed);
+      } else {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_viewedProgramsKey, backupViewed);
+      }
+    }
+
+    // Import completed programs
+    if (data['completed_programs'] != null) {
+      final backupCompleted = List<String>.from(data['completed_programs'] as List);
+      if (merge) {
+        final currentCompleted = await getCompletedPrograms();
+        final mergedCompleted = {...currentCompleted, ...backupCompleted}.toList();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_completedProgramsKey, mergedCompleted);
+      } else {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_completedProgramsKey, backupCompleted);
+      }
+    }
+  }
+
   /// Clear all data
   Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();
