@@ -203,17 +203,18 @@ class _WelcomePage extends StatelessWidget {
     final sessionService = SessionService();
     final greeting = sessionService.timeBasedGreeting;
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: 20),
           Icon(
             Icons.fitness_center,
-            size: 100,
+            size: 80,
             color: Theme.of(context).colorScheme.primary,
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           Text(
             '$greeting!',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -221,7 +222,7 @@ class _WelcomePage extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary,
                 ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             'Welcome to Workout Wizard',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -229,7 +230,7 @@ class _WelcomePage extends StatelessWidget {
                 ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Text(
             'Let\'s create your personalized fitness journey in just a few simple steps',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -237,28 +238,28 @@ class _WelcomePage extends StatelessWidget {
                 ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 32),
           _buildFeatureItem(
             context,
             Icons.speed,
             'Quick Setup',
             'Less than 2 minutes',
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _buildFeatureItem(
             context,
             Icons.psychology,
             'AI-Powered',
             'Personalized recommendations',
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _buildFeatureItem(
             context,
             Icons.emoji_events,
             'Track Progress',
             'Achievements & streaks',
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 32),
           ElevatedButton(
             onPressed: onNext,
             style: ElevatedButton.styleFrom(
@@ -273,7 +274,7 @@ class _WelcomePage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           OutlinedButton.icon(
             onPressed: () => _handleRestore(context),
             style: OutlinedButton.styleFrom(
@@ -282,6 +283,7 @@ class _WelcomePage extends StatelessWidget {
             icon: const Icon(Icons.restore),
             label: const Text('Restore from Backup'),
           ),
+          const SizedBox(height: 20),
         ],
       ),
     );
