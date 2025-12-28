@@ -9,6 +9,7 @@ import '../services/form_correction_storage_service.dart';
 import '../widgets/backup_dialogs.dart';
 import '../models/backup_model.dart';
 import 'form_correction_settings_screen.dart';
+import 'video_library_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -91,6 +92,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const FormCorrectionSettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
+                      title: 'Video Library',
+                      subtitle: 'View recorded workout videos',
+                      icon: Icons.video_library,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const VideoLibraryScreen(),
                           ),
                         );
                       },

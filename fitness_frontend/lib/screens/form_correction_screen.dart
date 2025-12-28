@@ -19,6 +19,7 @@ import '../widgets/rep_counter_widget.dart';
 import '../widgets/camera_positioning_guide.dart';
 import 'post_workout_analysis_screen.dart';
 import 'form_correction_settings_screen.dart';
+import 'video_player_screen.dart';
 
 /// Main screen for real-time exercise form correction
 class FormCorrectionScreen extends StatefulWidget {
@@ -253,7 +254,12 @@ class _FormCorrectionScreenState extends State<FormCorrectionScreen>
             label: 'View',
             textColor: Colors.white,
             onPressed: () {
-              // TODO: Open video player
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VideoPlayerScreen(videoPath: videoPath),
+                ),
+              );
             },
           ),
         ),

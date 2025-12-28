@@ -48,6 +48,7 @@ dependencies:
   google_mlkit_pose_detection: ^0.12.0
   # tflite_flutter: ^0.10.4  # Disabled: FFI compatibility issues, only needed for web/desktop
   camera: ^0.10.5
+  video_player: ^2.8.2
 
   # Audio Feedback
   flutter_tts: ^3.8.5
