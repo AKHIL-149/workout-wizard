@@ -11,6 +11,7 @@ import '../widgets/backup_dialogs.dart';
 import '../models/backup_model.dart';
 import 'form_correction_settings_screen.dart';
 import 'video_library_screen.dart';
+import 'workout_calendar_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -108,6 +109,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const VideoLibraryScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
+                      title: 'Workout Calendar',
+                      subtitle: 'View workout history and statistics',
+                      icon: Icons.calendar_month,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const WorkoutCalendarScreen(),
                           ),
                         );
                       },

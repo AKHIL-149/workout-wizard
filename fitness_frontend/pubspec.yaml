@@ -43,6 +43,7 @@ dependencies:
 
   # Analytics & Visualization
   fl_chart: ^0.65.0
+  table_calendar: ^3.0.9
 
   # Pose Detection & Camera
   google_mlkit_pose_detection: ^0.12.0
