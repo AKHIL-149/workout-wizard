@@ -14,6 +14,7 @@ import 'video_library_screen.dart';
 import 'workout_calendar_screen.dart';
 import 'notification_settings_screen.dart';
 import 'rest_timer_settings_screen.dart';
+import 'statistics_dashboard_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -117,8 +118,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     _buildListTile(
                       context,
+                      title: 'Statistics Dashboard',
+                      subtitle: 'View your progress and achievements',
+                      icon: Icons.bar_chart,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const StatisticsDashboardScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
                       title: 'Workout Calendar',
-                      subtitle: 'View workout history and statistics',
+                      subtitle: 'View workout history',
                       icon: Icons.calendar_month,
                       onTap: () {
                         Navigator.push(
@@ -168,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.29',
+                      subtitle: '0.4.30',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),
