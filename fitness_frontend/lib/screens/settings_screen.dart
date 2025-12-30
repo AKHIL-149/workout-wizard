@@ -12,6 +12,7 @@ import '../models/backup_model.dart';
 import 'form_correction_settings_screen.dart';
 import 'video_library_screen.dart';
 import 'workout_calendar_screen.dart';
+import 'notification_settings_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -123,6 +124,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const WorkoutCalendarScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
+                      title: 'Notification Settings',
+                      subtitle: 'Configure workout reminders',
+                      icon: Icons.notifications,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const NotificationSettingsScreen(),
                           ),
                         );
                       },

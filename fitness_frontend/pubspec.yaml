@@ -54,6 +54,10 @@ dependencies:
   # Audio Feedback
   flutter_tts: ^3.8.5
 
+  # Notifications
+  flutter_local_notifications: ^17.0.0
+  timezone: ^0.9.2
+
   # Utilities for Form Correction
   permission_handler: ^11.0.1
   vector_math: ^2.1.4

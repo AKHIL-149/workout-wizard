@@ -9,6 +9,7 @@ import 'services/analytics_service.dart';
 import 'services/gamification_service.dart';
 import 'services/storage_service.dart';
 import 'services/workout_session_service.dart';
+import 'services/notification_service.dart';
 import 'providers/recommendation_provider.dart';
 import 'providers/user_provider.dart';
 import 'models/exercise_set.dart';
@@ -37,6 +38,7 @@ void main() async {
   await AnalyticsService().initialize();
   await GamificationService().initialize();
   await WorkoutSessionService().initialize();
+  await NotificationService().initialize();
 
   // Initialize hybrid recommender (loads on-device program database)
   await HybridRecommenderService().initialize();
