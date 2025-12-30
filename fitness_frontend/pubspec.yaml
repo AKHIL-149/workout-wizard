@@ -53,6 +53,8 @@ dependencies:
 
   # Audio Feedback
   flutter_tts: ^3.8.5
+  audioplayers: ^5.2.1
+  vibration: ^1.8.4
 
   # Notifications
   flutter_local_notifications: ^17.0.0

@@ -13,6 +13,7 @@ import 'form_correction_settings_screen.dart';
 import 'video_library_screen.dart';
 import 'workout_calendar_screen.dart';
 import 'notification_settings_screen.dart';
+import 'rest_timer_settings_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -142,6 +143,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         );
                       },
                     ),
+                    _buildListTile(
+                      context,
+                      title: 'Rest Timer Settings',
+                      subtitle: 'Configure rest periods between sets',
+                      icon: Icons.timer,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RestTimerSettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -153,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.21',
+                      subtitle: '0.4.29',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),

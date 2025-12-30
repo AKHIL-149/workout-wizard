@@ -5,8 +5,10 @@ import '../models/exercise_set.dart';
 import '../models/exercise_performance.dart';
 import '../models/workout_session.dart';
 import '../services/workout_session_service.dart';
+import '../services/rest_timer_service.dart';
 import '../widgets/set_input_card.dart';
 import '../widgets/previous_performance_card.dart';
+import '../widgets/rest_timer_widget.dart';
 
 /// Screen for logging workout performance (sets, reps, weight)
 class ExerciseLoggingScreen extends StatefulWidget {
@@ -31,6 +33,7 @@ class ExerciseLoggingScreen extends StatefulWidget {
 
 class _ExerciseLoggingScreenState extends State<ExerciseLoggingScreen> {
   final WorkoutSessionService _sessionService = WorkoutSessionService();
+  final RestTimerService _timerService = RestTimerService();
 
   late DateTime _startTime;
   int _currentExerciseIndex = 0;
@@ -70,7 +73,7 @@ class _ExerciseLoggingScreenState extends State<ExerciseLoggingScreen> {
     setState(() => _isLoading = false);
   }
 
-  void _completeSet(String exerciseName, double weight, int reps, String? notes) {
+  void _completeSet(String exerciseName, double weight, int reps, String? notes) async {
     final exercise = widget.exercises
         .firstWhere((ex) => ex.name == exerciseName);
 
@@ -86,6 +89,15 @@ class _ExerciseLoggingScreenState extends State<ExerciseLoggingScreen> {
     setState(() {
       _exerciseSets[exerciseName]!.add(set);
     });
+
+    // Start rest timer if auto-start is enabled
+    final autoStart = await _timerService.isAutoStartEnabled();
+    if (autoStart) {
+      final restDuration = set.restSeconds > 0
+          ? set.restSeconds
+          : await _timerService.getDefaultRestTime();
+      await _timerService.startTimer(restDuration);
+    }
   }
 
   void _removeSet(String exerciseName, int index) {
@@ -266,6 +278,13 @@ class _ExerciseLoggingScreenState extends State<ExerciseLoggingScreen> {
                 ),
               ],
             ),
+          ),
+
+          // Rest timer widget
+          RestTimerWidget(
+            onTimerComplete: () {
+              // Optional: Add haptic feedback or sound
+            },
           ),
 
           // Previous performance card
