@@ -7,6 +7,7 @@ import '../services/gamification_service.dart';
 import '../services/backup_service.dart';
 import '../services/storage_service.dart';
 import '../services/form_correction_storage_service.dart';
+import '../services/workout_session_service.dart';
 import '../widgets/backup_dialogs.dart';
 import 'main_navigation_screen.dart';
 
@@ -318,6 +319,7 @@ class _WelcomePage extends StatelessWidget {
         analyticsService: AnalyticsService(),
         gamificationService: GamificationService(),
         formCorrectionService: FormCorrectionStorageService(),
+        workoutSessionService: WorkoutSessionService(),
       );
 
       // Try to preview and import

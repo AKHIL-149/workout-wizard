@@ -11,17 +11,19 @@ import 'session_service.dart';
 import 'analytics_service.dart';
 import 'gamification_service.dart';
 import 'form_correction_storage_service.dart';
+import 'workout_session_service.dart';
 
 /// Service for backing up and restoring user data
 class BackupService {
   static const String backupVersion = '1.0.0';
-  static const String appVersion = '0.4.20'; // Update this with app version
+  static const String appVersion = '0.4.26'; // Update this with app version
 
   final StorageService _storageService;
   final SessionService _sessionService;
   final AnalyticsService _analyticsService;
   final GamificationService _gamificationService;
   final FormCorrectionStorageService _formCorrectionService;
+  final WorkoutSessionService _workoutSessionService;
 
   BackupService({
     required StorageService storageService,
@@ -29,11 +31,13 @@ class BackupService {
     required AnalyticsService analyticsService,
     required GamificationService gamificationService,
     required FormCorrectionStorageService formCorrectionService,
+    required WorkoutSessionService workoutSessionService,
   })  : _storageService = storageService,
         _sessionService = sessionService,
         _analyticsService = analyticsService,
         _gamificationService = gamificationService,
-        _formCorrectionService = formCorrectionService;
+        _formCorrectionService = formCorrectionService,
+        _workoutSessionService = workoutSessionService;
 
   /// Export all user data to a backup file
   Future<ExportResult> exportAllData({String? password}) async {
@@ -269,7 +273,11 @@ class BackupService {
 
     // Form correction
     data['form_correction'] =
-        await _formCorrectionService.exportData();
+        _formCorrectionService.exportData();
+
+    // Workout sessions
+    data['workout_sessions'] =
+        await _workoutSessionService.exportAllWorkoutSessions();
 
     return data;
   }
@@ -312,6 +320,14 @@ class BackupService {
     if (data.containsKey('form_correction')) {
       await _formCorrectionService.importData(
         data['form_correction'] as Map<String, dynamic>,
+        merge: merge,
+      );
+    }
+
+    // Restore workout sessions
+    if (data.containsKey('workout_sessions')) {
+      await _workoutSessionService.importWorkoutSessions(
+        data['workout_sessions'] as Map<String, dynamic>,
         merge: merge,
       );
     }

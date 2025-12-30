@@ -102,7 +102,7 @@ class _VideoLibraryScreenState extends State<VideoLibraryScreen> {
 
     if (confirmed == true) {
       try {
-        await _videoService.deleteOldVideos(daysOld: 7);
+        await _videoService.deleteOldVideos(daysToKeep: 7);
         await _loadVideos();
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

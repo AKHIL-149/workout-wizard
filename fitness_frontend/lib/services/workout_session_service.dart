@@ -1,7 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/workout_session.dart';
-import '../models/exercise_performance.dart';
-import '../models/exercise_set.dart';
 
 /// Service for managing workout session data with Hive storage
 class WorkoutSessionService {

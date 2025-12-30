@@ -1,4 +1,3 @@
-import '../models/workout_session.dart';
 import '../models/exercise_performance.dart';
 import '../models/exercise_set.dart';
 import '../models/progression_metrics.dart';

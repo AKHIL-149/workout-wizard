@@ -6,6 +6,7 @@ import '../services/session_service.dart';
 import '../services/analytics_service.dart';
 import '../services/gamification_service.dart';
 import '../services/form_correction_storage_service.dart';
+import '../services/workout_session_service.dart';
 import '../widgets/backup_dialogs.dart';
 import '../models/backup_model.dart';
 import 'form_correction_settings_screen.dart';
@@ -32,6 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       analyticsService: AnalyticsService(),
       gamificationService: GamificationService(),
       formCorrectionService: FormCorrectionStorageService(),
+      workoutSessionService: WorkoutSessionService(),
     );
   }
 
