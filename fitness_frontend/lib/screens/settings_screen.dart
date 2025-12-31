@@ -19,6 +19,8 @@ import 'workout_template_library_screen.dart';
 import 'exercise_library_screen.dart';
 import 'program_library_screen.dart';
 import 'active_program_screen.dart';
+import 'recovery_metrics_screen.dart';
+import 'deload_settings_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -136,6 +138,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     _buildListTile(
                       context,
+                      title: 'Recovery Tracking',
+                      subtitle: 'Log sleep, energy, and soreness metrics',
+                      icon: Icons.monitor_heart,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RecoveryMetricsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
+                      title: 'Deload Settings',
+                      subtitle: 'Configure deload weeks and recovery',
+                      icon: Icons.auto_mode,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const DeloadSettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
                       title: 'Workout Templates',
                       subtitle: 'Create and manage workout routines',
                       icon: Icons.note_add,
@@ -243,7 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.34',
+                      subtitle: '0.4.35',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),

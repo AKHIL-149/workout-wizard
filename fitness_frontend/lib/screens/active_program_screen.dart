@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import '../models/workout_program.dart';
 import '../services/program_library_service.dart';
 import '../services/program_enrollment_service.dart';
+import '../services/deload_service.dart';
+import '../models/deload_settings.dart';
 
 /// Screen showing active program progress
 class ActiveProgramScreen extends StatefulWidget {
@@ -16,9 +18,12 @@ class _ActiveProgramScreenState extends State<ActiveProgramScreen> {
   final ProgramEnrollmentService _enrollmentService =
       ProgramEnrollmentService();
   final ProgramLibraryService _libraryService = ProgramLibraryService();
+  final DeloadService _deloadService = DeloadService();
 
   ProgramEnrollment? _enrollment;
   WorkoutProgram? _program;
+  DeloadSettings? _deloadSettings;
+  DeloadRecommendation? _deloadRecommendation;
   bool _isLoading = true;
 
   @override
@@ -35,16 +40,25 @@ class _ActiveProgramScreenState extends State<ActiveProgramScreen> {
 
       if (enrollment != null) {
         final program = _libraryService.getProgramById(enrollment.programId);
+        final deloadSettings = await _deloadService.getSettings();
+        final deloadRec = _deloadService.getDeloadRecommendation(
+          enrollment,
+          deloadSettings,
+        );
 
         setState(() {
           _enrollment = enrollment;
           _program = program;
+          _deloadSettings = deloadSettings;
+          _deloadRecommendation = deloadRec;
           _isLoading = false;
         });
       } else {
         setState(() {
           _enrollment = null;
           _program = null;
+          _deloadSettings = null;
+          _deloadRecommendation = null;
           _isLoading = false;
         });
       }
@@ -208,6 +222,10 @@ class _ActiveProgramScreenState extends State<ActiveProgramScreen> {
         children: [
           _buildProgressCard(completion),
           const SizedBox(height: 16),
+          if (_deloadRecommendation != null) ...[
+            _buildDeloadRecommendationCard(_deloadRecommendation!),
+            const SizedBox(height: 16),
+          ],
           _buildCurrentWeekCard(currentWeek),
           const SizedBox(height: 16),
           _buildWeekList(),
@@ -506,6 +524,184 @@ class _ActiveProgramScreenState extends State<ActiveProgramScreen> {
                 ),
               );
             }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeloadRecommendationCard(DeloadRecommendation recommendation) {
+    Color intensityColor;
+    IconData intensityIcon;
+
+    switch (recommendation.recommendedIntensity) {
+      case DeloadIntensity.light:
+        intensityColor = Colors.blue;
+        intensityIcon = Icons.water_drop;
+        break;
+      case DeloadIntensity.moderate:
+        intensityColor = Colors.orange;
+        intensityIcon = Icons.opacity;
+        break;
+      case DeloadIntensity.minimal:
+        intensityColor = Colors.green;
+        intensityIcon = Icons.wb_sunny_outlined;
+        break;
+    }
+
+    return Card(
+      color: Colors.amber.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.warning_amber, color: Colors.orange.shade700),
+                const SizedBox(width: 8),
+                const Text(
+                  'Deload Recommended',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.info_outline,
+                          size: 16, color: Colors.grey.shade700),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Reason',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    recommendation.reason,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: intensityColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: intensityColor),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(intensityIcon,
+                                size: 16, color: intensityColor),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Recommended Intensity',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: intensityColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          recommendation.recommendedIntensity.name
+                              .toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: intensityColor,
+                          ),
+                        ),
+                        Text(
+                          '${(recommendation.recommendedIntensity.volumeReduction * 100).toStringAsFixed(0)}% volume reduction',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (recommendation.recoveryScore > 0) ...[
+                  const SizedBox(width: 12),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Recovery',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          recommendation.recoveryScore.toStringAsFixed(1),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: recommendation.recoveryScore >= 3
+                                ? Colors.green
+                                : Colors.orange,
+                          ),
+                        ),
+                        Text(
+                          '/5.0',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              '💡 Tip: Reduce volume and intensity this week to promote recovery and prevent overtraining.',
+              style: TextStyle(
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
           ],
         ),
       ),
