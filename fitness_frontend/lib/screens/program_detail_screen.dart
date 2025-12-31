@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/workout_program.dart';
+import '../services/program_enrollment_service.dart';
+import 'active_program_screen.dart';
 
 /// Detailed view of a training program
 class ProgramDetailScreen extends StatelessWidget {
@@ -342,15 +344,7 @@ class ProgramDetailScreen extends StatelessWidget {
         ],
       ),
       child: ElevatedButton.icon(
-        onPressed: () {
-          // TODO: Implement program enrollment in next version (v0.4.34)
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Program enrollment coming in next update!'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        },
+        onPressed: () => _startProgram(context),
         icon: const Icon(Icons.play_arrow),
         label: const Text('Start Program'),
         style: ElevatedButton.styleFrom(
@@ -358,5 +352,85 @@ class ProgramDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _startProgram(BuildContext context) async {
+    final enrollmentService = ProgramEnrollmentService();
+
+    // Check if already enrolled
+    final existing = enrollmentService.getEnrollmentByProgramId(program.id);
+    if (existing != null && existing.isActive) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Already enrolled in this program'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+
+      // Navigate to active program screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const ActiveProgramScreen(),
+        ),
+      );
+      return;
+    }
+
+    // Confirm enrollment
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Start Program?'),
+        content: Text(
+          'Are you ready to start ${program.name}?\n\n'
+          'This will deactivate any other active programs.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Start Program'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true || !context.mounted) return;
+
+    try {
+      await enrollmentService.enrollInProgram(program.id, program.name);
+
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Started ${program.name}!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Navigate to active program screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const ActiveProgramScreen(),
+        ),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
