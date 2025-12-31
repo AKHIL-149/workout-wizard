@@ -17,6 +17,7 @@ import 'rest_timer_settings_screen.dart';
 import 'statistics_dashboard_screen.dart';
 import 'workout_template_library_screen.dart';
 import 'exercise_library_screen.dart';
+import 'program_library_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -100,6 +101,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const FormCorrectionSettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
+                      title: 'Training Programs',
+                      subtitle: 'Browse structured workout programs',
+                      icon: Icons.assignment,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProgramLibraryScreen(),
                           ),
                         );
                       },
@@ -213,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.32',
+                      subtitle: '0.4.33',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),

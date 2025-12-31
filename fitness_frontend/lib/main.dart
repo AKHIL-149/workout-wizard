@@ -17,6 +17,7 @@ import 'models/exercise_set.dart';
 import 'models/exercise_performance.dart';
 import 'models/workout_session.dart';
 import 'models/workout_template.dart';
+import 'models/workout_program.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,10 @@ void main() async {
   Hive.registerAdapter(WorkoutSessionAdapter());
   Hive.registerAdapter(WorkoutTemplateAdapter());
   Hive.registerAdapter(TemplateExerciseAdapter());
+  Hive.registerAdapter(WorkoutProgramAdapter());
+  Hive.registerAdapter(ProgramWeekAdapter());
+  Hive.registerAdapter(ProgramDayAdapter());
+  Hive.registerAdapter(ProgramEnrollmentAdapter());
 
   // Open Hive boxes for form correction
   await Hive.openBox<Map>('form_correction_sessions');
