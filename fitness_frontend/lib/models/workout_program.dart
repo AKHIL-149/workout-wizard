@@ -106,6 +106,44 @@ class WorkoutProgram {
       notes: json['notes'] as String?,
     );
   }
+
+  /// Create a copy with optional modifications
+  WorkoutProgram copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? difficulty,
+    int? durationWeeks,
+    int? daysPerWeek,
+    List<String>? goals,
+    List<ProgramWeek>? weeks,
+    String? author,
+    bool? isBuiltIn,
+    DateTime? createdAt,
+    String? imageUrl,
+    List<String>? tags,
+    String? notes,
+  }) {
+    return WorkoutProgram(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      difficulty: difficulty ?? this.difficulty,
+      durationWeeks: durationWeeks ?? this.durationWeeks,
+      daysPerWeek: daysPerWeek ?? this.daysPerWeek,
+      goals: goals ?? this.goals,
+      weeks: weeks ?? this.weeks,
+      author: author ?? this.author,
+      isBuiltIn: isBuiltIn ?? this.isBuiltIn,
+      createdAt: createdAt ?? this.createdAt,
+      imageUrl: imageUrl ?? this.imageUrl,
+      tags: tags ?? this.tags,
+      notes: notes ?? this.notes,
+    );
+  }
+
+  /// Check if this is a custom program
+  bool get isCustom => !isBuiltIn;
 }
 
 /// A week within a program

@@ -13,6 +13,7 @@ import 'services/notification_service.dart';
 import 'services/workout_template_service.dart';
 import 'services/program_enrollment_service.dart';
 import 'services/deload_service.dart';
+import 'services/custom_program_service.dart';
 import 'providers/recommendation_provider.dart';
 import 'providers/user_provider.dart';
 import 'models/exercise_set.dart';
@@ -57,6 +58,7 @@ void main() async {
   await WorkoutTemplateService().initialize();
   await ProgramEnrollmentService().initialize();
   await DeloadService().initialize();
+  await CustomProgramService().initialize();
 
   // Initialize hybrid recommender (loads on-device program database)
   await HybridRecommenderService().initialize();

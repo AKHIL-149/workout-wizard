@@ -21,6 +21,7 @@ import 'program_library_screen.dart';
 import 'active_program_screen.dart';
 import 'recovery_metrics_screen.dart';
 import 'deload_settings_screen.dart';
+import 'custom_programs_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -132,6 +133,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const ProgramLibraryScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
+                      title: 'My Programs',
+                      subtitle: 'Create and customize workout programs',
+                      icon: Icons.edit_note,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CustomProgramsScreen(),
                           ),
                         );
                       },
@@ -273,7 +288,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.35',
+                      subtitle: '0.4.36',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),
