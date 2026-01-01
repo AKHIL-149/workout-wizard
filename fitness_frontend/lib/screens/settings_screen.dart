@@ -22,6 +22,7 @@ import 'active_program_screen.dart';
 import 'recovery_metrics_screen.dart';
 import 'deload_settings_screen.dart';
 import 'custom_programs_screen.dart';
+import 'program_import_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -147,6 +148,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const CustomProgramsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
+                      title: 'Import Program',
+                      subtitle: 'Import programs via QR code or link',
+                      icon: Icons.qr_code_scanner,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProgramImportScreen(),
                           ),
                         );
                       },
@@ -288,7 +303,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.36',
+                      subtitle: '0.4.37',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),

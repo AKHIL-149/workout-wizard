@@ -4,6 +4,7 @@ import '../services/custom_program_service.dart';
 import '../services/program_library_service.dart';
 import 'program_detail_screen.dart';
 import 'program_editor_screen.dart';
+import 'program_share_screen.dart';
 
 /// Screen for managing user's custom workout programs
 class CustomProgramsScreen extends StatefulWidget {
@@ -202,6 +203,15 @@ class _CustomProgramsScreenState extends State<CustomProgramsScreen> {
     );
   }
 
+  void _shareProgram(WorkoutProgram program) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProgramShareScreen(program: program),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -345,6 +355,11 @@ class _CustomProgramsScreenState extends State<CustomProgramsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                TextButton.icon(
+                  onPressed: () => _shareProgram(program),
+                  icon: const Icon(Icons.share, size: 18),
+                  label: const Text('Share'),
+                ),
                 TextButton.icon(
                   onPressed: () => _editProgram(program),
                   icon: const Icon(Icons.edit, size: 18),
