@@ -23,6 +23,7 @@ import 'recovery_metrics_screen.dart';
 import 'deload_settings_screen.dart';
 import 'custom_programs_screen.dart';
 import 'program_import_screen.dart';
+import 'workout_buddies_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -168,6 +169,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     _buildListTile(
                       context,
+                      title: 'Workout Buddies',
+                      subtitle: 'Connect with friends and share progress',
+                      icon: Icons.people,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const WorkoutBuddiesScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
                       title: 'Recovery Tracking',
                       subtitle: 'Log sleep, energy, and soreness metrics',
                       icon: Icons.monitor_heart,
@@ -303,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.37',
+                      subtitle: '0.4.38',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),
