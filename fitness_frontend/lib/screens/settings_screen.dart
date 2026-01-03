@@ -24,6 +24,7 @@ import 'deload_settings_screen.dart';
 import 'custom_programs_screen.dart';
 import 'program_import_screen.dart';
 import 'workout_buddies_screen.dart';
+import 'community_library_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -183,6 +184,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     _buildListTile(
                       context,
+                      title: 'Community Library',
+                      subtitle: 'Browse and rate user-submitted programs',
+                      icon: Icons.library_books,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CommunityLibraryScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
                       title: 'Recovery Tracking',
                       subtitle: 'Log sleep, energy, and soreness metrics',
                       icon: Icons.monitor_heart,
@@ -318,7 +333,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.38',
+                      subtitle: '0.4.39',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),

@@ -15,6 +15,7 @@ import 'services/program_enrollment_service.dart';
 import 'services/deload_service.dart';
 import 'services/custom_program_service.dart';
 import 'services/workout_buddies_service.dart';
+import 'services/community_library_service.dart';
 import 'providers/recommendation_provider.dart';
 import 'providers/user_provider.dart';
 import 'models/exercise_set.dart';
@@ -24,6 +25,7 @@ import 'models/workout_template.dart';
 import 'models/workout_program.dart';
 import 'models/deload_settings.dart';
 import 'models/social_models.dart';
+import 'models/program_rating.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +49,8 @@ void main() async {
   Hive.registerAdapter(SocialProfileAdapter());
   Hive.registerAdapter(WorkoutBuddyAdapter());
   Hive.registerAdapter(ProgressUpdateAdapter());
+  Hive.registerAdapter(ProgramRatingAdapter());
+  Hive.registerAdapter(CommunityProgramMetaAdapter());
 
   // Open Hive boxes for form correction
   await Hive.openBox<Map>('form_correction_sessions');
@@ -65,6 +69,7 @@ void main() async {
   await DeloadService().initialize();
   await CustomProgramService().initialize();
   await WorkoutBuddiesService().initialize();
+  await CommunityLibraryService().initialize();
 
   // Initialize hybrid recommender (loads on-device program database)
   await HybridRecommenderService().initialize();
