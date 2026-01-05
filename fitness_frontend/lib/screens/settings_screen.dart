@@ -26,6 +26,7 @@ import 'program_import_screen.dart';
 import 'workout_buddies_screen.dart';
 import 'community_library_screen.dart';
 import 'challenges_screen.dart';
+import 'health_integration_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -213,6 +214,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     _buildListTile(
                       context,
+                      title: 'Health Integration',
+                      subtitle: 'Sync with Apple Health or Google Fit',
+                      icon: Icons.health_and_safety,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HealthIntegrationScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
                       title: 'Recovery Tracking',
                       subtitle: 'Log sleep, energy, and soreness metrics',
                       icon: Icons.monitor_heart,
@@ -348,7 +363,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.40',
+                      subtitle: '0.4.41',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),

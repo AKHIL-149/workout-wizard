@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/workout_session.dart';
+import 'health_integration_service.dart';
 
 /// Service for managing workout session data with Hive storage
 class WorkoutSessionService {
@@ -10,6 +11,7 @@ class WorkoutSessionService {
 
   static const String _boxName = 'workout_sessions';
   Box<WorkoutSession>? _box;
+  final HealthIntegrationService _healthService = HealthIntegrationService();
 
   /// Initialize the service and open Hive box
   Future<void> initialize() async {
@@ -28,6 +30,27 @@ class WorkoutSessionService {
   /// Save a workout session
   Future<void> saveWorkoutSession(WorkoutSession session) async {
     await _getBox.put(session.id, session);
+
+    // Auto-sync to health app if enabled
+    try {
+      final config = _healthService.getSyncConfig();
+      if (config != null && config.isEnabled && config.autoSync) {
+        // Calculate workout duration and calories
+        final duration = session.endTime.difference(session.startTime);
+        final caloriesBurned = session.caloriesBurned?.toInt() ?? 0;
+
+        if (caloriesBurned > 0) {
+          await _healthService.exportWorkout(
+            startTime: session.startTime,
+            endTime: session.endTime,
+            caloriesBurned: caloriesBurned,
+          );
+        }
+      }
+    } catch (e) {
+      // Log error but don't fail the save operation
+      print('Health sync error: $e');
+    }
   }
 
   /// Get a workout session by ID
