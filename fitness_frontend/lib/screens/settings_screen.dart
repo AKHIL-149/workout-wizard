@@ -27,6 +27,7 @@ import 'workout_buddies_screen.dart';
 import 'community_library_screen.dart';
 import 'challenges_screen.dart';
 import 'health_integration_screen.dart';
+import 'export_settings_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -228,6 +229,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     _buildListTile(
                       context,
+                      title: 'Export Data',
+                      subtitle: 'Export workouts to CSV or PDF',
+                      icon: Icons.file_download,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ExportSettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
                       title: 'Recovery Tracking',
                       subtitle: 'Log sleep, energy, and soreness metrics',
                       icon: Icons.monitor_heart,
@@ -363,7 +378,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.41',
+                      subtitle: '0.4.42',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),

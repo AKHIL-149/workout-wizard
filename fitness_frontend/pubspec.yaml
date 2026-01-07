@@ -74,6 +74,11 @@ dependencies:
   # Health Integration
   health: ^10.2.0
 
+  # Data Export
+  csv: ^6.0.0
+  pdf: ^3.11.1
+  printing: ^5.13.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

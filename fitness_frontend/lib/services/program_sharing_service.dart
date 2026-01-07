@@ -26,7 +26,7 @@ class ProgramSharingService {
         'program': programData,
         'metadata': {
           'appName': 'Workout Wizard',
-          'appVersion': '0.4.41',
+          'appVersion': '0.4.42',
         },
       };
     } catch (e) {
