@@ -19,6 +19,7 @@ import 'services/community_library_service.dart';
 import 'services/challenge_service.dart';
 import 'services/health_integration_service.dart';
 import 'services/export_service.dart';
+import 'services/calendar_sync_service.dart';
 import 'providers/recommendation_provider.dart';
 import 'providers/user_provider.dart';
 import 'models/exercise_set.dart';
@@ -32,6 +33,7 @@ import 'models/program_rating.dart';
 import 'models/workout_challenge.dart';
 import 'models/health_data.dart';
 import 'models/export_config.dart';
+import 'models/calendar_sync.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,6 +66,9 @@ void main() async {
   Hive.registerAdapter(HealthSyncHistoryAdapter());
   Hive.registerAdapter(ExportConfigAdapter());
   Hive.registerAdapter(ExportHistoryAdapter());
+  Hive.registerAdapter(CalendarSyncConfigAdapter());
+  Hive.registerAdapter(SyncedCalendarEventAdapter());
+  Hive.registerAdapter(CalendarSyncHistoryAdapter());
 
   // Open Hive boxes for form correction
   await Hive.openBox<Map>('form_correction_sessions');
@@ -86,6 +91,7 @@ void main() async {
   await ChallengeService().initialize();
   await HealthIntegrationService().initialize();
   await ExportService().initialize();
+  await CalendarSyncService().initialize();
 
   // Initialize hybrid recommender (loads on-device program database)
   await HybridRecommenderService().initialize();

@@ -28,6 +28,7 @@ import 'community_library_screen.dart';
 import 'challenges_screen.dart';
 import 'health_integration_screen.dart';
 import 'export_settings_screen.dart';
+import 'calendar_sync_screen.dart';
 
 /// Settings screen for backup, restore, and app configuration
 class SettingsScreen extends StatefulWidget {
@@ -243,6 +244,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     _buildListTile(
                       context,
+                      title: 'Calendar Sync',
+                      subtitle: 'Sync workouts to device calendar',
+                      icon: Icons.calendar_today,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CalendarSyncScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      context,
                       title: 'Recovery Tracking',
                       subtitle: 'Log sleep, energy, and soreness metrics',
                       icon: Icons.monitor_heart,
@@ -378,7 +393,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _buildListTile(
                       context,
                       title: 'App Version',
-                      subtitle: '0.4.42',
+                      subtitle: '0.4.43',
                       icon: Icons.info_outline,
                       onTap: null,
                     ),
